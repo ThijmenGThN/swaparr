@@ -18,7 +18,7 @@ Swaparr is currently in development and may undergo changes.
 
 ## Getting Started
 
-To begin, download the executable compatible with your operating system, and utilize the provided examples to execute Swaparr.
+To begin, [download the executable](https://github.com/ThijmenGThN/swaparr/releases) compatible with your operating system, and use the provided samples below to run Swaparr.
 
 ### Arguments
 
