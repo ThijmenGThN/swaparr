@@ -79,7 +79,7 @@ If you need assistance or have suggestions for improvement, please don't hesitat
 
 ## Development
 
-### To be announced
+### To be added
 
 - [ ] Request search on API after removal of torrent.
 - [ ] Containerize Swaperr.
