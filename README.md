@@ -2,7 +2,9 @@
 
 Radarr and Sonarr currently lack a built-in mechanism to handle stalled torrents, this project aims to solve that, it is designed in Rust, offering a lightweight and easy to run executable.
 
-![Preview](https://i.imgur.com/clSL0YN.png?s=128)
+<div style="text-align:center">
+    <img src="https://i.imgur.com/clSL0YN.png?s=128" />
+</div>
 
 Swaparr is inspired by a Reddit thread ["I wrote a script that replaces slow/dead torrents automatically"](https://www.reddit.com/r/radarr/comments/101q31k/i_wrote_a_script_that_replaces_slowdead_torrents/) written by [Douglas96](https://www.reddit.com/user/Douglas96/).
 
