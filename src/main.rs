@@ -35,7 +35,7 @@ fn main() {
 
     // ----- Display Settings -----
 
-    println!("\n ─ Swappar {}", VERSION);
+    println!("\n ─ Swaparr {}", VERSION);
 
     println!("╭─╮ Platform: {}", &args.platform);
     println!("│ │ Time threshold: {}", &args.time_threshold);
