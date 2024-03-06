@@ -18,7 +18,9 @@ Swaparr is currently in development and may undergo changes.
 
 ## Getting Started
 
-### Formats
+To begin, download the executable compatible with your operating system, and utilize the provided examples to execute Swaparr.
+
+### Arguments
 
 > **IMPORTANT:** The quotation marks (`"`) around the args are required for the script to work.
 
@@ -27,8 +29,7 @@ Swaparr is currently in development and may undergo changes.
 ```
 
 
-
-### Example
+### Examples
 
 > **IMPORTANT:** Adjust `baseurl`, `apikey`, and `platform` to your scenario; other values can remain as is for more advanced use-cases.
 
