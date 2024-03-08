@@ -1,90 +1,134 @@
 # Swaparr
 
-Radarr and Sonarr currently lack a built-in mechanism to handle stalled torrents, this project aims to solve that, it is designed in Rust, offering a lightweight and easy to run executable.
+Radarr and Sonarr currently lack a built-in mechanism to handle stalled torrents, this project aims to solve that.
+
+> Swaparr is inspired by a Reddit thread ["I wrote a script that replaces slow/dead torrents automatically"](https://www.reddit.com/r/radarr/comments/101q31k/i_wrote_a_script_that_replaces_slowdead_torrents/) from [Douglas96](https://www.reddit.com/user/Douglas96/).
 
 <p align="center">
   <img src="https://i.imgur.com/clSL0YN.png?s=128">
 </p>
 
-Swaparr is inspired by a Reddit thread ["I wrote a script that replaces slow/dead torrents automatically"](https://www.reddit.com/r/radarr/comments/101q31k/i_wrote_a_script_that_replaces_slowdead_torrents/) written by [Douglas96](https://www.reddit.com/user/Douglas96/).
 
+## Disclaimer
 
-
-## Notice
-
-Swaparr is currently in development and may undergo changes.
-
+As Swaparr is not yet at its 1.0.0 stage, expect significant changes and occasional unpredictability until then.
 
 
 ## Getting Started
 
-To begin, [download the executable](https://github.com/ThijmenGThN/swaparr/releases) compatible with your operating system, and use the provided samples below to run Swaparr.
+In this section, we'll deploy Swaparr using Docker and its compose plugin.
 
-### Arguments
+> Docker is not mandatory; you can also [run the binaries](#getting-started-without-docker) or compile Swaparr yourself. However, note that more advanced steps are required for these methods.
 
-> **IMPORTANT:** The quotation marks (`"`) around the args are required for the script to work.
+Start with the provided compose file as a foundation, and customize it by excluding or adjusting the services.
 
-```sh
-./swaparr "<baseurl>" "<apikey>" "<platform>" "<time_threshold>" "<size_threshold>" "<check_interval>" "<strike_threshold>" "<aggressive_strikes>"
+```yml
+version: '3'
+services:
+
+  radarr:
+    build: .
+    container_name: swaparr-radarr
+    restart: unless-stopped
+    environment:
+      - BASEURL=http://127.0.0.1:7878 # IP or FQDN           (Required)
+      - APIKEY=7f3a8..cbc07           # Sonarr API Key       (Required)                
+      - PLATFORM=radarr               # "radarr" or "sonarr" (Optional) default: radarr
+      - TIME_THRESHOLD=2h             # 1d, 6h, 30m, etc..   (Optional) default: 2h    
+      - SIZE_THRESHOLD=25GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
+      - CHECK_INTERVAL=10m            # 1d, 6h, 30m, etc..   (Optional) default: 10m   
+      - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3     
+      - AGGRESSIVE_STRIKES=false      # Boolean              (Optional) default: false 
+
+  # -- (Optional)
+  sonarr: 
+    build: .
+    container_name: swaparr-sonarr
+    restart: unless-stopped
+    environment:
+      - BASEURL=http://127.0.0.1:8989 # IP or FQDN           (Required)
+      - APIKEY=7f3a8..cbc07           # Sonarr API Key       (Required)                
+      - PLATFORM=sonarr               # "radarr" or "sonarr" (Optional) default: radarr
+      - TIME_THRESHOLD=2h             # 1d, 6h, 30m, etc..   (Optional) default: 2h    
+      - SIZE_THRESHOLD=25GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
+      - CHECK_INTERVAL=10m            # 1d, 6h, 30m, etc..   (Optional) default: 10m   
+      - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3     
+      - AGGRESSIVE_STRIKES=false      # Boolean              (Optional) default: false 
 ```
 
+### Starting Swaparr
 
-### Examples
-
-> **IMPORTANT:** Adjust `baseurl`, `apikey`, and `platform` to your scenario; other values can remain as is for more advanced use-cases.
-
-#### Radarr
 ```sh
-./swaparr "http://127.0.0.1:7878" "1234567890abcdefghijklmnopqrstuv" "radarr" "2h" "25 GB" "10m" "3" "false"
+docker compose up -d
 ```
 
-#### Sonarr
+#### Observing Swaparr
+
+#### Example for Radarr - (_[It should output something similar to this.](#swaparr)_)
+
 ```sh
-./swaparr "http://127.0.0.1:8989" "1234567890abcdefghijklmnopqrstuv" "sonarr" "2h" "25 GB" "10m" "3" "false"
+docker compose logs radarr
 ```
 
+### Stopping Swaparr
+
+```sh
+docker compose down
+```
+
+## Environment Variables
+
+| Name | Default | Description |
+|-|-|-|
+| BASEURL | `http://127.0.0.1:7878` | URL of a Sonarr or Radarr instance. |
+| APIKEY | `7f3a8..cbc07` | API key for accessing the Radarr or Sonarr instance. |
+| PLATFORM | `radarr` | Indicates the platform Swaparr interacts with, either `radarr` or `sonarr`. |
+| TIME_THRESHOLD | `2h` | Duration threshold for torrents to be considered stalled. |
+| SIZE_THRESHOLD | `25GB` | Size limit for torrents to be ignored. |
+| CHECK_INTERVAL | `10m` | Interval for monitoring torrents. |
+| STRIKE_THRESHOLD | `3` | Number of strikes before a torrent is subject to removal. |
+| AGGRESSIVE_STRIKES | `false` | Enables removal of stalled torrents and those stuck fetching metadata. |
 
 
-## Status-Types
+## Status Types
 
-| Type    | Meaning                                                                                           |
-|---------|--------------------------------------------------------------------------------------------------|
-| Normal  | The torrent is operating within expected parameters and is not considered to be stalled or slow. |
-| Pending | The torrent is still undergoing processing and may not be actively downloading. **Can be bypassed with `aggressive_strikes` set to `true`.** |
-| Striked | Torrent has been flagged as slow or stalled and may be subject to removal.                        |
-| Removed | Torrent has been removed from Radarr or Sonarr.                                                   |
-| Ignored | Torrent is larger than the set threshold and will not be considered for processing.              |
-
-
-
-## Arguments
-
-| Name             | Description                                                      | Default         | Expects      | Notes                              |
-|:-----------------|:-----------------------------------------------------------------|:----------------|:-------------|:------------------------------------|
-| baseurl          | The URL of a Sonarr or Radarr instance.                          | `http://127.0.0.1:7878`  | IP or FQDN   |                                    |
-| apikey           | The API key of the Radarr or Sonarr instance.                    | `1234567890abcdefghijklmnopqrstuv` | string of 32 | Can be found at Settings > General > API Key |
-| platform         | Defines which platform the script will run for.                  | `radarr`          | `"radarr"` or `"sonarr"` | **Has to be exact!**              |
-| time_threshold   | Torrents above this time will eventually be removed.             | `2h`                | 3d, 6h, 30m, etc.. | [Supported human-like time formats](https://docs.rs/ms-converter/latest/ms_converter/#supported-time-strings) |
-| size_threshold   | Torrents above this size will be ignored.                        | `25 GB`              | 1024 MB, 1 GiB, 10240 KB | [Supported human-like size formats](https://docs.rs/bytesize/latest/bytesize/#constants) |
-| check_interval  | Time to wait before checking if a torrent is susceptible to a strike. | `10m`               | 3d, 6h, 30m, etc.. | [Supported human-like time formats](https://docs.rs/ms-converter/latest/ms_converter/#supported-time-strings) |
-| strike_threshold| Number of strikes a torrent needs to be removed.                 | `3`                     | int-range    |                                    |
-| aggressive_strikes| Enables removal of torrents stuck fetching metadata and stalled torrents. | `false`            | Boolean      |                                    |
+| Type | Meaning |
+| --- | --- |
+| `Normal`  | Not stalled or slow, will not be striked. |
+| `Pending` | Fetching metadata or stalled (can be bypassed with `aggressive_strikes`). |
+| `Striked` | Flagged as slow or stalled, pending removal. |
+| `Removed` | Removed from Radarr / Sonarr. |
+| `Ignored` | Outside of threshold bounds. |
 
 
+## Getting Started (without Docker)
 
-## Need help?
+To begin, download the executable compatible with your operating system.
+
+Before running Swaparr, manually set the required [environment variables](#environment-variables).
+
+> Note: You do not need to define every environment variable; only the ones you need and those that are required.
+
+#### Powershell
+
+```ps
+$Env:<variable>="<value>"
+```
+
+#### Shell
+
+```sh
+export <variable>="<value>"
+```
+
+You should now be able to run Swaparr.
+
+
+## Need Help?
 
 If you need assistance or have suggestions for improvement, please don't hesitate to [open an issue](https://github.com/ThijmenGThN/swaparr/issues). Your feedback is valuable.
 
 
-
-## Development
-
-### To be added
-
-- [ ] Request search on API after removal of torrent.
-- [ ] Containerize Swaperr.
-
-### Contributions
+## Contributions
 
 Feel free to [open an issue](https://github.com/ThijmenGThN/swaparr/issues) or PR if you want to contribute to this project.
