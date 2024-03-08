@@ -111,13 +111,13 @@ Before running Swaparr, manually set the required [environment variables](#envir
 
 #### Powershell
 
-```ps
+```
 $Env:<variable>="<value>"
 ```
 
 #### Shell
 
-```sh
+```
 export <variable>="<value>"
 ```
 
