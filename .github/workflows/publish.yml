@@ -1,0 +1,16 @@
+name: Publish to GitHub Container Registry
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Publish
+        run: |
+          docker login --username thijmengthn --password ${{ secrets.GH_PAT }} ghcr.io
+          docker build . --tag ghcr.io/thijmengthn/swaparr:latest
+          docker push ghcr.io/thijmengthn/swaparr:latest
