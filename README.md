@@ -27,7 +27,7 @@ version: '3'
 services:
 
   radarr:
-    build: .
+    image: ghcr.io/thijmengthn/swaparr:latest
     container_name: swaparr-radarr
     restart: unless-stopped
     environment:
@@ -42,7 +42,7 @@ services:
 
   # -- (Optional)
   sonarr: 
-    build: .
+    image: ghcr.io/thijmengthn/swaparr:latest
     container_name: swaparr-sonarr
     restart: unless-stopped
     environment:
