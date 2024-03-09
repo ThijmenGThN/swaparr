@@ -1,4 +1,4 @@
-const VERSION: &str = "0.1.0 Pre-Release";
+const VERSION: &str = "0.2.0 Pre-Release";
 
 use std::{collections::HashMap, thread::sleep, time::Duration};
 
