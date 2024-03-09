@@ -14,6 +14,17 @@ Radarr and Sonarr currently lack a built-in mechanism to handle stalled torrents
 As Swaparr is not yet at its 1.0.0 stage, expect significant changes and occasional unpredictability until then.
 
 
+## What is Swaparr?
+
+Swaparr quietly operates in the background, offering full customization options and clear visibility through console logs. Its primary function is to address the issue of stalled torrents in Radarr and Sonarr instances.
+
+### Key Features:
+
+- **Automatic Detection:** Swaparr scans through all active torrents in your Radarr or Sonarr instances every 10 minutes (adjustable) to identify potential slowdowns indicating stalled torrents.
+- **Strike System:** Identified torrents are given a strike, and this evaluation cycle repeats periodically. If a torrent accumulates the maximum allowed strikes, Swaparr automatically removes it from your instance.
+- **Customization:** Swaparr offers customization options such as time and size thresholds, strike thresholds, and the ability to toggle aggressive strike behavior.
+
+
 ## Getting Started
 
 In this section, we'll deploy Swaparr using Docker and its compose plugin.
@@ -32,7 +43,7 @@ services:
     restart: unless-stopped
     environment:
       - BASEURL=http://127.0.0.1:7878 # IP or FQDN           (Required)
-      - APIKEY=7f3a8..cbc07           # Sonarr API Key       (Required)                
+      - APIKEY=7f3a8..cbc07           # Radarr API Key       (Required)                
       - PLATFORM=radarr               # "radarr" or "sonarr" (Optional) default: radarr
       - TIME_THRESHOLD=2h             # 1d, 6h, 30m, etc..   (Optional) default: 2h    
       - SIZE_THRESHOLD=25GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
@@ -78,16 +89,16 @@ docker compose down
 
 ## Environment Variables
 
-| Name | Default | Description |
-|-|-|-|
-| BASEURL | `http://127.0.0.1:7878` | URL of a Sonarr or Radarr instance. |
-| APIKEY | `7f3a8..cbc07` | API key for accessing the Radarr or Sonarr instance. |
-| PLATFORM | `radarr` | Indicates the platform Swaparr interacts with, either `radarr` or `sonarr`. |
-| TIME_THRESHOLD | `2h` | Duration threshold for torrents to be considered stalled. |
-| SIZE_THRESHOLD | `25GB` | Size limit for torrents to be ignored. |
-| CHECK_INTERVAL | `10m` | Interval for monitoring torrents. |
-| STRIKE_THRESHOLD | `3` | Number of strikes before a torrent is subject to removal. |
-| AGGRESSIVE_STRIKES | `false` | Enables removal of stalled torrents and those stuck fetching metadata. |
+| Name              | Default              | Description                                                                                     |
+|-------------------|----------------------|-------------------------------------------------------------------------------------------------|
+| BASEURL           | `http://127.0.0.1:7878` | The URL of either a Sonarr or Radarr instance.                                                |
+| APIKEY            | `7f3a8..cbc07`         | The API key required for accessing the Radarr or Sonarr instance.                             |
+| PLATFORM          | `radarr`              | Indicates the platform with which Swaparr interacts, either `radarr` or `sonarr`.              |
+| TIME_THRESHOLD    | `2h`                  | The duration threshold for torrents to be considered stalled; torrents exceeding this limit will be removed. |
+| SIZE_THRESHOLD    | `25GB`                | The size limit for torrents to be ignored; torrents exceeding this limit will not be processed. |
+| CHECK_INTERVAL    | `10m`                 | The interval at which Swaparr monitors torrents.                                               |
+| STRIKE_THRESHOLD  | `3`                   | The number of strikes a torrent needs to reach before it is subject to removal.                |
+| AGGRESSIVE_STRIKES| `false`               | Enables the removal of stalled torrents and those stuck fetching metadata.                      |
 
 
 ## Status Types

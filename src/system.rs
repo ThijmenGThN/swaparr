@@ -1,4 +1,4 @@
-use std::{env, process::exit};
+use std::{env, process::exit, thread::sleep, time::Duration};
 
 #[derive(Debug)]
 pub struct Envs {
@@ -24,6 +24,8 @@ pub fn env() -> Envs {
         // -- Unrecoverable.
         apikey: env::var("APIKEY").unwrap_or_else(|_| {
             println!("FATAL: \"APIKEY\" NOT SET");
+            // Delayed exit for UX on Windows.
+            sleep(Duration::from_secs(2));
             exit(1);
         }),
 
@@ -33,6 +35,8 @@ pub fn env() -> Envs {
             .parse::<u32>()
             .unwrap_or_else(|_| {
                 println!("FATAL: \"STRIKE_THRESHOLD\" IS INVALID");
+                // Delayed exit for UX on Windows.
+                sleep(Duration::from_secs(2));
                 exit(1);
             }),
         aggresive_strikes: env::var("AGGRESSIVE_STRIKES")
@@ -40,6 +44,8 @@ pub fn env() -> Envs {
             .parse::<bool>()
             .unwrap_or_else(|_| {
                 println!("FATAL: \"AGGRESSIVE_STRIKES\" IS INVALID");
+                // Delayed exit for UX on Windows.
+                sleep(Duration::from_secs(2));
                 exit(1);
             }),
 
