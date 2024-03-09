@@ -5,7 +5,7 @@ Radarr and Sonarr currently lack a built-in mechanism to handle stalled torrents
 > Swaparr is inspired by a Reddit thread ["I wrote a script that replaces slow/dead torrents automatically"](https://www.reddit.com/r/radarr/comments/101q31k/i_wrote_a_script_that_replaces_slowdead_torrents/) from [Douglas96](https://www.reddit.com/user/Douglas96/).
 
 <p align="center">
-  <img src="https://i.imgur.com/clSL0YN.png?s=128">
+  <img src="https://i.imgur.com/7D84ooQ.png?s=128">
 </p>
 
 
