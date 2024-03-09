@@ -114,7 +114,7 @@ docker compose down
 
 ## Getting Started (without Docker)
 
-To begin, download the executable compatible with your operating system.
+To begin, [download the executable](https://github.com/ThijmenGThN/swaparr/releases) compatible with your operating system.
 
 Before running Swaparr, manually set the required [environment variables](#environment-variables).
 
