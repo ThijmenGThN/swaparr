@@ -32,7 +32,7 @@ services:
     restart: unless-stopped
     environment:
       - BASEURL=http://127.0.0.1:7878 # IP or FQDN           (Required)
-      - APIKEY=7f3a8..cbc07           # Sonarr API Key       (Required)                
+      - APIKEY=7f3a8..cbc07           # Radarr API Key       (Required)                
       - PLATFORM=radarr               # "radarr" or "sonarr" (Optional) default: radarr
       - TIME_THRESHOLD=2h             # 1d, 6h, 30m, etc..   (Optional) default: 2h    
       - SIZE_THRESHOLD=25GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
