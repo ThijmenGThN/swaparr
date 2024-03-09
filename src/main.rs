@@ -1,4 +1,4 @@
-const VERSION: &str = "0.1.0 Pre-Release";
+const VERSION: &str = "0.2.0 Pre-Release";
 
 use std::{collections::HashMap, thread::sleep, time::Duration};
 
@@ -59,7 +59,7 @@ fn main() {
             let mut status = String::from("Normal");
 
             // Add torrent id to strikes with default "0" if it does not exist yet.
-            let strikes: u32 = match strikelist.get(&id) {
+            let mut strikes: u32 = match strikelist.get(&id) {
                 Some(strikes) => strikes.clone(),
                 None => {
                     strikelist.insert(id, 0);
@@ -93,7 +93,8 @@ fn main() {
                 {
                     // Increment strikes if it's below set maximum.
                     if strikes < env.strike_threshold {
-                        strikelist.insert(id, strikes + 1);
+                        strikes += 1;
+                        strikelist.insert(id, strikes);
                     }
                     status = String::from("Striked");
                 }
