@@ -1,16 +1,20 @@
 name: Publish to GitHub Container Registry
 
 on:
-  push:
-    branches: [ main ]
+  release:
+    types: [created]
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Get version
+        id: get_version
+        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - name: Publish
         run: |
           docker login --username thijmengthn --password ${{ secrets.GH_PAT }} ghcr.io
-          docker build . --tag ghcr.io/thijmengthn/swaparr:latest
+          docker build . --tag ghcr.io/thijmengthn/swaparr:latest --tag ghcr.io/thijmengthn/swaparr:${{ steps.get_version.outputs.VERSION }}
           docker push ghcr.io/thijmengthn/swaparr:latest
+          docker push ghcr.io/thijmengthn/swaparr:${{ steps.get_version.outputs.VERSION }}
