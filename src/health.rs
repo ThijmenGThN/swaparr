@@ -6,7 +6,10 @@ use crate::system::Envs;
 
 pub fn check(env: &Envs) {
     // Check if the API can be reached.
-    match request::get(&format!("{}/api/v3/health", &env.baseurl)) {
+    match request::get(&format!(
+        "{}/api/v3/health?apikey={}",
+        &env.baseurl, &env.apikey
+    )) {
         Ok(res) => {
             if res.status() != 200 {
                 alert(
