@@ -24,14 +24,13 @@ Swaparr quietly operates in the background, offering full customization options 
 - **Strike System:** Identified torrents are given a strike, and this evaluation cycle repeats periodically. If a torrent accumulates the maximum allowed strikes, Swaparr automatically removes it from your instance.
 - **Customization:** Swaparr offers customization options such as time and size thresholds, strike thresholds, and the ability to toggle aggressive strike behavior.
 
-
 ## Getting Started
 
 In this section, we'll deploy Swaparr using Docker and its compose plugin.
 
-> Docker is not mandatory; you can also [run the binaries](#getting-started-without-docker) or compile Swaparr yourself. However, note that more advanced steps are required for these methods.
+> Docker is not mandatory; you can also [run the binaries](#prerequisites) or compile Swaparr yourself. However, note that more advanced steps are required for these methods.
 
-Start with the provided compose file as a foundation, and customize it by excluding or adjusting the services.
+Start with the provided compose file as a foundation, and customize it by excluding or adjusting any services.
 
 ```yml
 version: '3'
@@ -67,27 +66,57 @@ services:
       - AGGRESSIVE_STRIKES=false      # Boolean              (Optional) default: false 
 ```
 
-### Starting Swaparr
+
+<details>
+  <summary>
+    <strong>Starting Swaparr</strong>
+  </summary>
+
+To start Swaparr, run the following command:
 
 ```sh
 docker compose up -d
 ```
 
-#### Observing Swaparr
+</details>
 
-#### Example for Radarr - (_[It should output something similar to this.](#swaparr)_)
+
+<details>
+  <summary>
+    <strong>Observing Swaparr</strong>
+  </summary>
+
+The following example will output logs of Swaparr's Radarr service.
 
 ```sh
 docker compose logs radarr
 ```
 
-### Stopping Swaparr
+_[It should output something similar to this.](#swaparr)_
+
+</details>
+
+
+<details>
+  <summary>
+    <strong>Stopping Swaparr</strong>
+  </summary>
+
+To stop Swaparr, run the following command:
 
 ```sh
 docker compose down
 ```
 
-## Environment Variables
+</details>
+
+
+## Useful Information
+
+<details>
+  <summary>
+    <strong>Environment Variables</strong>
+  </summary>
 
 | Name              | Default              | Description                                                                                     |
 |-------------------|----------------------|-------------------------------------------------------------------------------------------------|
@@ -100,8 +129,14 @@ docker compose down
 | STRIKE_THRESHOLD  | `3`                   | The number of strikes a torrent needs to reach before it is subject to removal.                |
 | AGGRESSIVE_STRIKES| `false`               | Enables the removal of stalled torrents and those stuck fetching metadata.                      |
 
+</details>
 
-## Status Types
+
+
+<details>
+  <summary>
+    <strong>Status-Types Explained</strong>
+  </summary>
 
 | Type | Meaning |
 | --- | --- |
@@ -111,8 +146,16 @@ docker compose down
 | `Removed` | Removed from Radarr / Sonarr. |
 | `Ignored` | Outside of threshold bounds. |
 
+</details>
 
-## Getting Started (without Docker)
+
+
+<details>
+  <summary>
+    <strong>Getting Started</strong> (without Docker)
+  </summary>
+
+#### Prerequisites
 
 To begin, [download the executable](https://github.com/ThijmenGThN/swaparr/releases) compatible with your operating system.
 
@@ -132,12 +175,24 @@ $Env:<variable>="<value>"
 export <variable>="<value>"
 ```
 
-You should now be able to run Swaparr.
+#### Run Swaparr
+
+You should now be able to run Swaparr directly from the binary file.
+
+</details>
+
 
 
 ## Need Help?
 
 If you need assistance or have suggestions for improvement, please don't hesitate to [open an issue](https://github.com/ThijmenGThN/swaparr/issues). Your feedback is valuable.
+
+
+
+## Feature Requests, Bug Reports
+
+Your feedback, bug reports and suggestions are very welcome, you can do so by [opening an issue](https://github.com/ThijmenGThN/swaparr/issues).
+
 
 
 ## Contributions
