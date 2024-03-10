@@ -1,7 +1,7 @@
-const VERSION: &str = "0.2.0 Pre-Release";
-
 use std::{collections::HashMap, thread::sleep, time::Duration};
 
+mod health;
+mod logger;
 mod parser;
 mod queue;
 mod render;
@@ -11,13 +11,22 @@ fn main() {
     // Load environment variables.
     let env = system::env();
 
+    // Health check the API, verbosely checks if a connection can be established.
+    health::check(&env);
+
     // Based on the platform, use a different strategy to approach radarr or sonarr their API.
     let queue_get_url = {
         let method = match env.platform.as_str() {
             "radarr" => "Movie",
             "sonarr" => "Series",
             _ => {
-                panic!("Unknown platform, either set it to 'radarr' or 'sonarr'.");
+                logger::alert(
+                    "FATAL",
+                    "Unknown \"PLATFORM\" value.".to_string(),
+                    "Either set it to \"radarr\" or \"sonarr\".".to_string(),
+                    true,
+                );
+                system::exit(1);
             }
         };
         let params = format!("includeUnknown{method}Items=true&include{method}=true");
@@ -29,15 +38,7 @@ fn main() {
 
     // ----- Display Settings -----
 
-    println!("\n ─ Swaparr {}", VERSION);
-
-    println!("╭─╮ Platform: {}", &env.platform);
-    println!("│ │ Time threshold: {}", &env.time_threshold);
-    println!("│ │ Size threshold: {}", &env.size_threshold);
-    println!("│ │ Strike threshold: {}", &env.strike_threshold);
-    println!("╰─╯ Aggresive strikes: {}", &env.aggresive_strikes);
-
-    println!(" ─ Checking every: {}\n", env.check_interval);
+    logger::banner(&env, true);
 
     // ----- Striker Runtime -----
 

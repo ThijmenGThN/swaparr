@@ -1,6 +1,7 @@
 use reqwest::blocking as request;
 use serde::Deserialize;
 
+use crate::logger;
 use crate::parser;
 
 // -- Gets Torrents from Radarr or Sonarr.
@@ -10,12 +11,23 @@ pub fn get(url: &String) -> Vec<Torrent> {
         Ok(res) => match res.json() {
             Ok(res) => res,
             Err(_) => {
-                println!("WARN: Unable to process queue, will attempt again in next run.");
+                logger::alert(
+                    "WARN",
+                    "Unable to process queue, will attempt again next run.".to_string(),
+                    "The API has responded with an invalid response.".to_string(),
+                    false,
+                );
+
                 Response { records: vec![] }
             }
         },
         Err(_) => {
-            println!("WARN: Failed to get queue, will attempt again in next run.");
+            logger::alert(
+                "WARN",
+                "Unable to process queue, will attempt again next run.".to_string(),
+                "The connection to the API was unsuccessful.".to_string(),
+                false,
+            );
             Response { records: vec![] }
         }
     };
@@ -46,7 +58,12 @@ pub fn delete(url: &String) {
     match request::Client::new().delete(url).send() {
         Ok(_) => (),
         Err(_) => {
-            println!("WARN: Failed to remove torrent, will attempt again in next run.");
+            logger::alert(
+                "WARN",
+                "Failed to remove torrent, will attempt again next run.".to_string(),
+                "The API has refused this request.".to_string(),
+                false,
+            );
         }
     }
 }

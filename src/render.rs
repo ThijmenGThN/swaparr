@@ -1,5 +1,7 @@
 use tabled::{settings::Style, Table, Tabled};
 
+use crate::logger;
+
 #[derive(Tabled)]
 pub struct TableContent {
     pub strikes: String,
@@ -16,8 +18,6 @@ pub fn table(contents: &Vec<TableContent>) {
         table.with(Style::rounded());
         println!("{}", table.to_string())
     } else {
-        println!("╭───────────────────────────────────────────────────────────────────────────╮");
-        println!("│                            No torrents found                              │");
-        println!("╰───────────────────────────────────────────────────────────────────────────╯");
+        logger::empty(false);
     }
 }
