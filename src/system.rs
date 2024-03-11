@@ -14,7 +14,7 @@ pub struct Envs {
     pub check_interval: String,
 }
 
-// -- Use defaults if unset.
+// Voids provided vars and returns a default value.
 fn default(which: &str, default: &str, invalid: bool) -> String {
     println!(
         " ─ ENV: \"{}\" is {}, using default: \"{}\".",
@@ -25,13 +25,13 @@ fn default(which: &str, default: &str, invalid: bool) -> String {
     default.to_string()
 }
 
-// -- Delayed process exit.
+// Delayed process exit, looks better on Windows if running without Docker.
 pub fn exit(code: i32) -> ! {
     sleep(Duration::from_secs(2));
     process::exit(code)
 }
 
-// -- Returns environment variables from the host.
+// Returns environment variables from the host.
 pub fn env() -> Envs {
     Envs {
         // ----- Unrecoverable -----
@@ -42,8 +42,6 @@ pub fn env() -> Envs {
                 "There is no default value for this field.".to_string(),
                 None,
             );
-            // Delayed exit for UX on Windows.
-            sleep(Duration::from_secs(2));
             exit(1);
         }),
 

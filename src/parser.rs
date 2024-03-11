@@ -4,7 +4,36 @@ use bytesize::ByteSize;
 use humantime::format_duration;
 use ms_converter;
 
-// -- This will pretty-print an ETA from milliseconds.
+use crate::{logger, system};
+
+// This uses the environment variables to construct the get queue API URL.
+pub fn env_to_queue_get(env: &system::Envs) -> String {
+    // Translates platform to keyword used by the API.
+    let method = match env.platform.as_str() {
+        "radarr" => "Movie",
+        "sonarr" => "Series",
+        _ => {
+            // Supplied platform is not supported, throw an error.
+            logger::alert(
+                "FATAL",
+                "Unknown \"PLATFORM\" value.".to_string(),
+                "Either set it to \"radarr\" or \"sonarr\".".to_string(),
+                None,
+            );
+            system::exit(1);
+        }
+    };
+
+    // Constructs the entire GET request URL.
+    format!(
+        "{}/api/v3/queue?{}&apikey={}",
+        env.baseurl,
+        format!("includeUnknown{method}Items=true&include{method}=true"),
+        env.apikey
+    )
+}
+
+// This will pretty-print an ETA from milliseconds.
 pub fn ms_to_eta_string(ms: &u64) -> String {
     let eta = format_duration(Duration::from_millis(ms.clone())).to_string();
 
@@ -15,12 +44,12 @@ pub fn ms_to_eta_string(ms: &u64) -> String {
     }
 }
 
-// -- Converts human-readable string (from radarr or sonarr API) to milliseconds.
+// Converts human-readable string (from radarr or sonarr API) to milliseconds.
 pub fn string_to_ms(string: &String) -> Result<i64, ms_converter::Error> {
     ms_converter::ms(string)
 }
 
-// -- This will convert for example "1 TB", "512 MB", <"1.5 GB" to 1500000 (bytes)>.
+// This will convert for example "1 TB", "512 MB", <"1.5 GB" to 1500000 (bytes)>.
 pub fn string_bytesize_to_bytes(string: &String) -> u64 {
     match string.parse::<ByteSize>() {
         Ok(size) => size.as_u64(),
@@ -28,7 +57,7 @@ pub fn string_bytesize_to_bytes(string: &String) -> u64 {
     }
 }
 
-// -- Converts human-readable string (from radarr or sonarr API) to milliseconds.
+// Converts human-readable string (from radarr or sonarr API) to milliseconds.
 pub fn string_hms_to_ms(string: &String) -> u64 {
     let parts: Vec<&str> = string.split(|c| c == ':' || c == '.').collect();
 
