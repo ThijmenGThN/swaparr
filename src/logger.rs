@@ -1,5 +1,11 @@
 use crate::system;
 
+pub fn empty() {
+    println!(
+        "\n╭───────────────────────────────────────────────────────────────────────────╮\n│                            No torrents found                              │\n╰───────────────────────────────────────────────────────────────────────────╯\n",
+    );
+}
+
 pub fn alert(method: &str, title: String, message: String, error: Option<String>) {
     println!("\n ─ {}", method);
     println!("╭─╮ {}", title);
@@ -20,10 +26,4 @@ pub fn banner(env: &system::Envs) {
     println!("│ │ Strike threshold: {}", &env.strike_threshold);
     println!("╰─╯ Aggresive strikes: {}", &env.aggresive_strikes);
     println!(" ─ Checking every: {}\n", env.check_interval);
-}
-
-pub fn empty() {
-    println!(
-        "\n╭───────────────────────────────────────────────────────────────────────────╮\n│                            No torrents found                              │\n╰───────────────────────────────────────────────────────────────────────────╯\n",
-    );
 }
