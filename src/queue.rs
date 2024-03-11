@@ -42,10 +42,18 @@ pub fn get(url: &String, platform: &String) -> Vec<Torrent> {
         // Convert timeleft from HMS to milliseconds.
         let timeleft_ms = parser::string_hms_to_ms(&timeleft);
 
-        // Extract name from API record.
+        // Extract name from API record, if it fails return "Unknown".
         let name: String = match platform.as_str() {
-            "radarr" => record.movie.as_ref().unwrap().title.clone(),
-            "sonarr" => record.series.as_ref().unwrap().title.clone(),
+            "radarr" => record
+                .movie
+                .as_ref()
+                .map(|nested| nested.title.clone())
+                .unwrap_or_else(|| String::from("Unknown")),
+            "sonarr" => record
+                .series
+                .as_ref()
+                .map(|nested| nested.title.clone())
+                .unwrap_or_else(|| String::from("Unknown")),
             _ => String::from("Unknown"),
         };
 
