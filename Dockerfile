@@ -19,4 +19,4 @@ RUN apt clean
 
 COPY --from=build /swaparr/target/release/swaparr /usr/local/bin/swaparr
 
-CMD ["sh", "-c", "swaparr $BASEURL $APIKEY $PLATFORM $TIME_THRESHOLD $SIZE_THRESHOLD $CHECK_INTERVAL $STRIKE_THRESHOLD $AGGRESSIVE_STRIKES"]
+CMD ["sh", "-c", "swaparr"]
