@@ -5,7 +5,7 @@ use crate::logger;
 use crate::parser;
 
 // -- Gets Torrents from Radarr or Sonarr.
-pub fn get(url: &String) -> Vec<Torrent> {
+pub fn get(url: &String, platform: &String) -> Vec<Torrent> {
     // Request active torrents in queue from the Radarr or Sonarr API.
     let res: Response = match request::get(url) {
         Ok(res) => match res.json() {
@@ -15,7 +15,7 @@ pub fn get(url: &String) -> Vec<Torrent> {
                     "WARN",
                     "Unable to process queue, will attempt again next run.".to_string(),
                     "The API has responded with an invalid response.".to_string(),
-                    Some(error.to_string())
+                    Some(error.to_string()),
                 );
 
                 Response { records: vec![] }
@@ -26,7 +26,7 @@ pub fn get(url: &String) -> Vec<Torrent> {
                 "WARN",
                 "Unable to process queue, will attempt again next run.".to_string(),
                 "The connection to the API was unsuccessful.".to_string(),
-                Some(error.to_string())
+                Some(error.to_string()),
             );
             Response { records: vec![] }
         }
@@ -42,9 +42,16 @@ pub fn get(url: &String) -> Vec<Torrent> {
         // Convert timeleft from HMS to milliseconds.
         let timeleft_ms = parser::string_hms_to_ms(&timeleft);
 
+        // Extract name from API record.
+        let name: String = match platform.as_str() {
+            "radarr" => record.movie.as_ref().unwrap().title.clone(),
+            "sonarr" => record.series.as_ref().unwrap().title.clone(),
+            _ => String::from("Unknown"),
+        };
+
         torrents.push(Torrent {
             id: record.id,
-            name: record.movie.title.clone(),
+            name,
             size: record.size,
             eta: timeleft_ms,
         });
@@ -70,28 +77,29 @@ pub fn delete(url: &String) {
 
 // ----- STRUCTS -----
 
-#[derive(Debug, Deserialize, Clone)]
-pub struct Torrent {
-    pub id: u32,
-    pub name: String,
-    pub size: u64,
-    pub eta: u64,
-}
-
 #[derive(Deserialize)]
-struct RecordMovie {
-    title: String,
+struct Response {
+    records: Vec<Record>,
 }
 
 #[derive(Deserialize)]
 struct Record {
     id: u32,
     size: u64,
-    movie: RecordMovie,
+    movie: Option<NestedRecord>,
+    series: Option<NestedRecord>,
     timeleft: Option<String>,
 }
 
 #[derive(Deserialize)]
-struct Response {
-    records: Vec<Record>,
+struct NestedRecord {
+    title: String,
+}
+
+#[derive(Debug, Deserialize, Clone)]
+pub struct Torrent {
+    pub id: u32,
+    pub name: String,
+    pub size: u64,
+    pub eta: u64,
 }

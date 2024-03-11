@@ -24,7 +24,7 @@ fn main() {
                     "FATAL",
                     "Unknown \"PLATFORM\" value.".to_string(),
                     "Either set it to \"radarr\" or \"sonarr\".".to_string(),
-                    None
+                    None,
                 );
                 system::exit(1);
             }
@@ -49,7 +49,7 @@ fn main() {
         let mut table_contents: Vec<render::TableContent> = vec![];
 
         // Get all active torrents from the queue.
-        let queue_items = queue::get(&queue_get_url);
+        let queue_items = queue::get(&queue_get_url, &env.platform);
 
         // Cleanup torrents that no longer exists from strikes registry.
         strikelist.retain(|&k, _| queue_items.iter().any(|item| item.id == k));

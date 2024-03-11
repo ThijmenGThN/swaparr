@@ -781,6 +781,7 @@ dependencies = [
  "ms-converter",
  "reqwest",
  "serde",
+ "serde_json",
  "tabled",
 ]
 
