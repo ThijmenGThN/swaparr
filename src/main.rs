@@ -102,11 +102,10 @@ fn main() {
 
                 // Torrent meets set amount of strikes, a request to delete will be sent.
                 if strikes >= env.strike_threshold {
-                    let queue_delete_url = format!(
-                        "{}/api/v3/queue/{}?removeFromClient=true&blocklist=true&apikey={}",
+                    queue::delete(&format!(
+                        "{}/api/v3/queue/{}?blocklist=true&apikey={}",
                         env.baseurl, id, env.apikey
-                    );
-                    queue::delete(&queue_delete_url);
+                    ));
                     status = String::from("Removed");
                 }
             }
