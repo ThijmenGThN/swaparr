@@ -40,7 +40,7 @@ pub fn env() -> Envs {
                 "FATAL",
                 "ENV: \"APIKEY\" is undefined and required.".to_string(),
                 "There is no default value for this field.".to_string(),
-                None
+                None,
             );
             // Delayed exit for UX on Windows.
             sleep(Duration::from_secs(2));
