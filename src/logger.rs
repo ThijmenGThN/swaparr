@@ -1,29 +1,29 @@
 use crate::system;
 
-pub fn alert(method: &str, title: String, message: String, isolated: bool) {
-    print!("{}", if isolated { "\n" } else { "" });
-    println!(" ─ {}", method);
+pub fn alert(method: &str, title: String, message: String, error: Option<String>) {
+    println!("\n ─ {}", method);
     println!("╭─╮ {}", title);
     println!("╰─╯ {}", message);
-    print!("{}", if isolated { "\n" } else { "" });
+
+    if let Some(error) = error {
+        println!("{}", error);
+    }
+
+    println!("\n");
 }
 
-pub fn banner(env: &system::Envs, isolated: bool) {
-    print!("{}", if isolated { "\n" } else { "" });
-    println!(" ─ Swaparr");
+pub fn banner(env: &system::Envs) {
+    println!("\n ─ Swaparr");
     println!("╭─╮ Platform: {}", &env.platform);
     println!("│ │ Time threshold: {}", &env.time_threshold);
     println!("│ │ Size threshold: {}", &env.size_threshold);
     println!("│ │ Strike threshold: {}", &env.strike_threshold);
     println!("╰─╯ Aggresive strikes: {}", &env.aggresive_strikes);
-    println!(" ─ Checking every: {}", env.check_interval);
-    print!("{}", if isolated { "\n" } else { "" });
+    println!(" ─ Checking every: {}\n", env.check_interval);
 }
 
-pub fn empty(isolated: bool) {
-    print!("{}", if isolated { "\n" } else { "" });
-    println!("╭───────────────────────────────────────────────────────────────────────────╮");
-    println!("│                            No torrents found                              │");
-    println!("╰───────────────────────────────────────────────────────────────────────────╯");
-    print!("{}", if isolated { "\n" } else { "" });
+pub fn empty() {
+    println!(
+        "\n╭───────────────────────────────────────────────────────────────────────────╮\n│                            No torrents found                              │\n╰───────────────────────────────────────────────────────────────────────────╯\n",
+    );
 }

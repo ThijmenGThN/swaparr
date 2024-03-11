@@ -19,7 +19,7 @@ pub fn check(env: &Envs) {
                         "Obtain the {} API key in Settings > General > API Key",
                         &env.platform
                     ),
-                    true,
+                    None,
                 );
                 exit(1);
             }
@@ -31,8 +31,8 @@ pub fn check(env: &Envs) {
                     "A connection to the {} API could not be established.",
                     &env.platform
                 ),
-                error.to_string(),
-                true,
+                "Ensure that the API is accessible and try again.".to_string(),
+                Some(error.to_string()),
             );
             exit(1);
         }

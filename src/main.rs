@@ -24,7 +24,7 @@ fn main() {
                     "FATAL",
                     "Unknown \"PLATFORM\" value.".to_string(),
                     "Either set it to \"radarr\" or \"sonarr\".".to_string(),
-                    true,
+                    None
                 );
                 system::exit(1);
             }
@@ -38,7 +38,7 @@ fn main() {
 
     // ----- Display Settings -----
 
-    logger::banner(&env, true);
+    logger::banner(&env);
 
     // ----- Striker Runtime -----
 
