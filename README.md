@@ -13,6 +13,10 @@ Radarr and Sonarr currently lack a built-in mechanism to handle stalled torrents
 
 As Swaparr is not yet at its 1.0.0 stage, expect significant changes and occasional unpredictability until then.
 
+#### Planned Features
+
+- [ ] Lidarr support
+- [ ] Arm64 binaries for Raspberry Pi
 
 ## What is Swaparr?
 
