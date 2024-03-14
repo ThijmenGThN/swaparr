@@ -5,6 +5,33 @@ use serde::Deserialize;
 
 use crate::{logger, parser, render, system};
 
+#[derive(Deserialize)]
+struct Response {
+    records: Vec<Record>,
+}
+
+#[derive(Deserialize)]
+struct Record {
+    id: u32,
+    size: f64,
+    movie: Option<NestedRecord>,
+    series: Option<NestedRecord>,
+    timeleft: Option<String>,
+}
+
+#[derive(Deserialize)]
+struct NestedRecord {
+    title: String,
+}
+
+#[derive(Debug, Deserialize, Clone)]
+pub struct Torrent {
+    pub id: u32,
+    pub name: String,
+    pub size: u64,
+    pub eta: u64,
+}
+
 // Obtains Torrents from Radarr or Sonarr.
 pub fn get(url: &String, platform: &String) -> Vec<Torrent> {
     // Request active torrents in queue from the Radarr or Sonarr API.
@@ -66,7 +93,7 @@ pub fn get(url: &String, platform: &String) -> Vec<Torrent> {
         torrents.push(Torrent {
             id: record.id,
             name,
-            size: record.size,
+            size: record.size as u64,
             eta: timeleft_ms,
         });
     });
@@ -166,33 +193,4 @@ pub fn delete(url: &String) {
             );
         }
     }
-}
-
-// ----- STRUCTS -----
-
-#[derive(Deserialize)]
-struct Response {
-    records: Vec<Record>,
-}
-
-#[derive(Deserialize)]
-struct Record {
-    id: u32,
-    size: u64,
-    movie: Option<NestedRecord>,
-    series: Option<NestedRecord>,
-    timeleft: Option<String>,
-}
-
-#[derive(Deserialize)]
-struct NestedRecord {
-    title: String,
-}
-
-#[derive(Debug, Deserialize, Clone)]
-pub struct Torrent {
-    pub id: u32,
-    pub name: String,
-    pub size: u64,
-    pub eta: u64,
 }
