@@ -130,8 +130,10 @@ pub fn process(queue_items: Vec<Torrent>, strikelist: &mut HashMap<u32, u32>, en
             bypass = true;
         }
 
-        // Torrent is larger than set threshold.
-        let size_threshold_bytes = parser::string_bytesize_to_bytes(&env.size_threshold);
+        // Torrent is larger than set threshold. (Safe to unwrap, gets validated in health-check.)
+        let size_threshold_bytes = parser::string_bytesize_to_bytes(&env.size_threshold)
+            .unwrap()
+            .as_u64();
         if torrent.size >= size_threshold_bytes {
             status = String::from("Ignored");
             bypass = true;
@@ -140,8 +142,11 @@ pub fn process(queue_items: Vec<Torrent>, strikelist: &mut HashMap<u32, u32>, en
         // -- Strike rules -- Rules that define when to strike a torrent.
 
         if !bypass {
+            // Extract timestamp from time notation. (Safe to unwrap, gets validated in health-check.)
+            let time_threshold_ms =
+                parser::string_time_notation_to_ms(&env.time_threshold).unwrap() as u64;
+
             // Torrent will take longer than set threshold.
-            let time_threshold_ms = parser::string_hms_to_ms(&env.time_threshold);
             if (torrent.eta >= time_threshold_ms) || (torrent.eta == 0 && env.aggresive_strikes) {
                 // Increment strikes if it's below set maximum.
                 if strikes < env.strike_threshold {

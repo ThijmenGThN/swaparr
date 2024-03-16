@@ -44,17 +44,14 @@ pub fn ms_to_eta_string(ms: &u64) -> String {
     }
 }
 
-// Converts human-readable string (from radarr or sonarr API) to milliseconds.
-pub fn string_to_ms(string: &String) -> Result<i64, ms_converter::Error> {
+// Converts human-readable time notation to milliseconds.
+pub fn string_time_notation_to_ms(string: &String) -> Result<i64, ms_converter::Error> {
     ms_converter::ms(string)
 }
 
 // This will convert for example "1 TB", "512 MB", <"1.5 GB" to 1500000 (bytes)>.
-pub fn string_bytesize_to_bytes(string: &String) -> u64 {
-    match string.parse::<ByteSize>() {
-        Ok(size) => size.as_u64(),
-        Err(_) => 0,
-    }
+pub fn string_bytesize_to_bytes(string: &String) -> Result<ByteSize, String> {
+    string.parse::<ByteSize>()
 }
 
 // Converts human-readable string (from radarr or sonarr API) to milliseconds.
@@ -88,7 +85,6 @@ pub fn string_hms_to_ms(string: &String) -> u64 {
         _ => return 0,
     }
 
-    // Calculate total milliseconds
-    let total_ms = ((days * 24 + hours) * 3600 + minutes * 60 + seconds) * 1000;
-    total_ms
+    // Calculate total milliseconds and return.
+    ((days * 24 + hours) * 3600 + minutes * 60 + seconds) * 1000
 }

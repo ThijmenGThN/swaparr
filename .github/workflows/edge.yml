@@ -1,0 +1,17 @@
+name: Publish to GitHub Container Registry
+
+on:
+  push:
+    branches: [edge]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Publish
+        run: |
+          docker login --username thijmengthn --password ${{ secrets.GH_PAT }} ghcr.io
+          docker build . --tag ghcr.io/thijmengthn/swaparr:edge --tag ghcr.io/thijmengthn/swaparr:edge-${{ github.run_number }} --label "org.opencontainers.image.source=https://github.com/ThijmenGThN/swaparr" --label "org.opencontainers.image.description=Unstable release based on the Edge branch." --label "org.opencontainers.image.licenses=MIT"
+          docker push ghcr.io/thijmengthn/swaparr:edge
+          docker push ghcr.io/thijmengthn/swaparr:edge-${{ github.run_number }}
