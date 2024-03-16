@@ -12,5 +12,5 @@ jobs:
       - name: Publish
         run: |
           docker login --username thijmengthn --password ${{ secrets.GH_PAT }} ghcr.io
-          docker build . --tag ghcr.io/thijmengthn/swaparr:edge
-          docker push ghcr.io/thijmengthn/swaparr:edge
+          docker build . --tag ghcr.io/thijmengthn/swaparr:edge --label "org.opencontainers.image.source=https://github.com/ThijmenGThN/swaparr" --label "org.opencontainers.image.description=Unstable release based on the Edge branch." --label "org.opencontainers.image.licenses=MIT"
+          docker push --force ghcr.io/thijmengthn/swaparr:edge
