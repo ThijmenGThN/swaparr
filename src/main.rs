@@ -38,7 +38,7 @@ fn main() {
 
         // CHECK_INTERVAL sleeper for the main thread.
         sleep(Duration::from_millis(
-            match parser::string_to_ms(&env.check_interval) {
+            match parser::string_time_notation_to_ms(&env.check_interval) {
                 Ok(check_interval_ms) => check_interval_ms as u64,
                 Err(_) => 10 * 60 * 1000, // Using default, 10 minutes
             },
