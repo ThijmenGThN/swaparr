@@ -27,13 +27,13 @@ fn main() {
     // Main striker-runtime thread.
     loop {
         // Get all active torrents from the queue.
-        let queue_items = queue::get(&queueapi, &env.platform);
+        let queue_items = queue::get(&queueapi);
 
         // Cleanup torrents that no longer exists in the strikelist.
         strikelist.retain(|&k, _| queue_items.iter().any(|item| item.id == k));
 
         // Process torrents in the queue, a table with details will also be printed.
-        queue::process(queue_items, &mut strikelist, &env);
+        queue::process(&env, &baseapi, queue_items, &mut strikelist);
 
         println!(" ─ Checking again in {}..\n", &env.check_interval);
 

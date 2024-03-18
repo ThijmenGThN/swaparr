@@ -90,10 +90,10 @@ pub fn queueapi(platform: &str, baseapi: &str, apikey: &str) -> String {
     // Translates platform to keyword used by the API.
     match platform {
         "radarr" => format!("{baseapi}queue?includeUnknownMovieItems=true&includeMovie=true&apikey={apikey}"),
-        "sonarr" => format!("{baseapi}/api/v3/queue?includeUnknownSeriesItems=true&includeSeries=true&apikey={apikey}"),
-        "lidarr" => format!("{baseapi}/api/v1/queue?includeUnknownArtistItems=true&includeArtist=true&includeAlbum=true&apikey={apikey}"),
-        "readarr" => format!("{baseapi}/api/v1/queue?includeUnknownAuthorItems=true&includeAuthor=true&includeBook=true&apikey={apikey}"),
-        "whisparr" => format!("{baseapi}/api/v3/queue?includeUnknownSeriesItems=true&includeSeries=true&includeEpisode=true&apikey={apikey}"),
+        "sonarr" => format!("{baseapi}queue?includeUnknownSeriesItems=true&includeSeries=true&apikey={apikey}"),
+        "lidarr" => format!("{baseapi}queue?includeUnknownArtistItems=true&includeArtist=true&includeAlbum=true&apikey={apikey}"),
+        "readarr" => format!("{baseapi}queue?includeUnknownAuthorItems=true&includeAuthor=true&includeBook=true&apikey={apikey}"),
+        "whisparr" => format!("{baseapi}queue?includeUnknownSeriesItems=true&includeSeries=true&includeEpisode=true&apikey={apikey}"),
         _ => {
             // Supplied platform is not supported, throw an error.
             logger::alert(
