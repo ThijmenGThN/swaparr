@@ -11,14 +11,15 @@ fn main() {
     // Load environment variables.
     let env = system::env();
 
+    // Get the base and queue api url based on the platform.
+    let baseapi = parser::baseapi(&env.platform, &env.baseurl);
+    let queueapi = parser::queueapi(&env.platform, &baseapi, &env.apikey);
+
     // Health check the API, verbosely checks if a connection can be established.
-    health::check(&env);
+    health::api(&env.platform, &baseapi, &env.apikey);
 
     // Displays initial "banner" with set configurations.
     logger::banner(&env);
-
-    // Get the queue get url based on the platform.
-    let queue_get_url = parser::env_to_queue_get(&env);
 
     // List of striked torrents.
     let mut strikelist: HashMap<u32, u32> = HashMap::new();
@@ -26,13 +27,13 @@ fn main() {
     // Main striker-runtime thread.
     loop {
         // Get all active torrents from the queue.
-        let queue_items = queue::get(&queue_get_url, &env.platform);
+        let queue_items = queue::get(&env.platform, &queueapi);
 
         // Cleanup torrents that no longer exists in the strikelist.
         strikelist.retain(|&k, _| queue_items.iter().any(|item| item.id == k));
 
         // Process torrents in the queue, a table with details will also be printed.
-        queue::process(queue_items, &mut strikelist, &env);
+        queue::process(&env, &baseapi, queue_items, &mut strikelist);
 
         println!(" ─ Checking again in {}..\n", &env.check_interval);
 

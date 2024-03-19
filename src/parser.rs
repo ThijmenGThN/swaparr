@@ -4,34 +4,7 @@ use bytesize::ByteSize;
 use humantime::format_duration;
 use ms_converter;
 
-use crate::{logger, system};
-
-// This uses the environment variables to construct the get queue API URL.
-pub fn env_to_queue_get(env: &system::Envs) -> String {
-    // Translates platform to keyword used by the API.
-    let method = match env.platform.as_str() {
-        "radarr" => "Movie",
-        "sonarr" => "Series",
-        _ => {
-            // Supplied platform is not supported, throw an error.
-            logger::alert(
-                "FATAL",
-                "Unknown \"PLATFORM\" value.".to_string(),
-                "Either set it to \"radarr\" or \"sonarr\".".to_string(),
-                None,
-            );
-            system::exit(1);
-        }
-    };
-
-    // Constructs the entire GET request URL.
-    format!(
-        "{}/api/v3/queue?{}&apikey={}",
-        env.baseurl,
-        format!("includeUnknown{method}Items=true&include{method}=true"),
-        env.apikey
-    )
-}
+use crate::{logger, queue, system};
 
 // This will pretty-print an ETA from milliseconds.
 pub fn ms_to_eta_string(ms: &u64) -> String {
@@ -87,4 +60,83 @@ pub fn string_hms_to_ms(string: &String) -> u64 {
 
     // Calculate total milliseconds and return.
     ((days * 24 + hours) * 3600 + minutes * 60 + seconds) * 1000
+}
+
+// Returns the API version per platform.
+pub fn baseapi(platform: &str, baseurl: &str) -> String {
+    // Translates platform to keyword used by the API.
+    match platform {
+        "radarr" => format!("{baseurl}/api/v3/"),
+        "sonarr" => format!("{baseurl}/api/v3/"),
+        "lidarr" => format!("{baseurl}/api/v1/"),
+        "readarr" => format!("{baseurl}/api/v1/"),
+        "whisparr" => format!("{baseurl}/api/v3/"),
+        _ => {
+            // Supplied platform is not supported, throw an error.
+            logger::alert(
+                "FATAL",
+                "Unknown \"PLATFORM\" value.".to_string(),
+                "Either set it to \"radarr\", \"sonarr\", \"lidarr\", \"readarr\" or \"whisparr\"."
+                    .to_string(),
+                None,
+            );
+            system::exit(1);
+        }
+    }
+}
+
+// Returns the API endpoint per platform.
+pub fn queueapi(platform: &str, baseapi: &str, apikey: &str) -> String {
+    // Translates platform to keyword used by the API.
+    match platform {
+        "radarr" => format!("{baseapi}queue?includeUnknownMovieItems=true&includeMovie=true&apikey={apikey}"),
+        "sonarr" => format!("{baseapi}queue?includeUnknownSeriesItems=true&includeSeries=true&apikey={apikey}"),
+        "lidarr" => format!("{baseapi}queue?includeUnknownArtistItems=true&includeArtist=true&includeAlbum=true&apikey={apikey}"),
+        "readarr" => format!("{baseapi}queue?includeUnknownAuthorItems=true&includeAuthor=true&includeBook=true&apikey={apikey}"),
+        "whisparr" => format!("{baseapi}queue?includeUnknownSeriesItems=true&includeSeries=true&includeEpisode=true&apikey={apikey}"),
+        _ => {
+            // Supplied platform is not supported, throw an error.
+            logger::alert(
+                "FATAL",
+                "Unknown \"PLATFORM\" value.".to_string(),
+                "Either set it to \"radarr\", \"sonarr\", \"lidarr\", \"readarr\" or \"whisparr\"."
+                    .to_string(),
+                None,
+            );
+            system::exit(1);
+        }
+    }
+}
+
+// This function extracts the name from a record based on the provided platform.
+pub fn recordname(platform: &str, record: &queue::Record) -> String {
+    let mut title: &str = match platform {
+        "radarr" => match record.movie.as_ref() {
+            Some(movie) => &movie.title,
+            None => "Unknown",
+        },
+        "sonarr" => match record.series.as_ref() {
+            Some(series) => &series.title,
+            None => "Unknown",
+        },
+        "lidarr" => match record.album.as_ref() {
+            Some(album) => &album.title,
+            None => "Unknown",
+        },
+        "readarr" => match record.book.as_ref() {
+            Some(book) => &book.title,
+            None => "Unknown",
+        },
+        "whisparr" => match record.series.as_ref() {
+            Some(series) => &series.title,
+            None => "Unknown",
+        },
+        _ => "Unknown",
+    };
+
+    if title.is_empty() {
+        title = "Unknown"
+    }
+
+    String::from(title)
 }
