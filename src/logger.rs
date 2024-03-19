@@ -6,7 +6,7 @@ pub fn empty() {
     );
 }
 
-pub fn alert(method: &str, title: String, message: String, error: Option<String>) {
+pub fn alert(method: &str, title: &str, message: &str, error: Option<String>) {
     println!("\n ─ {}", method);
     println!("╭─╮ {}", title);
     println!("╰─╯ {}", message);

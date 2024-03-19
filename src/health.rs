@@ -12,8 +12,8 @@ pub fn api(platform: &str, baseapi: &str, apikey: &str) {
             if res.status() != 200 {
                 logger::alert(
                     "FATAL",
-                    "The provided \"APIKEY\" is not valid.".to_string(),
-                    format!("Obtain the {platform} API key in Settings > General > API Key"),
+                    "The provided \"APIKEY\" is not valid.",
+                    format!("Obtain the {platform} API key in Settings > General > API Key").as_str(),
                     None,
                 );
                 system::exit(1);
@@ -23,8 +23,8 @@ pub fn api(platform: &str, baseapi: &str, apikey: &str) {
         Err(error) => {
             logger::alert(
                 "FATAL",
-                format!("A connection to the {platform} API could not be established."),
-                "Ensure that the API is accessible and try again.".to_string(),
+                format!("A connection to the {platform} API could not be established.").as_str(),
+                "Ensure that the API is accessible and try again.",
                 Some(error.to_string()),
             );
             system::exit(1);

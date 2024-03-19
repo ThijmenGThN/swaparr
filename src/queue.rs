@@ -46,8 +46,8 @@ pub fn get(platform: &str, url: &str) -> Vec<Torrent> {
             Err(error) => {
                 logger::alert(
                     "WARN",
-                    "Unable to process queue, will attempt again next run.".to_string(),
-                    "The API has responded with an invalid response.".to_string(),
+                    "Unable to process queue, will attempt again next run.",
+                    "The API has responded with an invalid response.",
                     Some(error.to_string()),
                 );
                 // Something went wrong, return an empty queue as fallback.
@@ -57,8 +57,8 @@ pub fn get(platform: &str, url: &str) -> Vec<Torrent> {
         Err(error) => {
             logger::alert(
                 "WARN",
-                "Unable to process queue, will attempt again next run.".to_string(),
-                "The connection to the API was unsuccessful.".to_string(),
+                "Unable to process queue, will attempt again next run.",
+                "The connection to the API was unsuccessful.",
                 Some(error.to_string()),
             );
             // Something went wrong, return an empty queue as fallback.
@@ -184,8 +184,8 @@ pub fn delete(url: &String) {
         Err(error) => {
             logger::alert(
                 "WARN",
-                "Failed to remove torrent, will attempt again next run.".to_string(),
-                "The API has refused this request.".to_string(),
+                "Failed to remove torrent, will attempt again next run.",
+                "The API has refused this request.",
                 Some(error.to_string()),
             );
         }

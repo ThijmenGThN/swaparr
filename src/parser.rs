@@ -75,9 +75,8 @@ pub fn baseapi(platform: &str, baseurl: &str) -> String {
             // Supplied platform is not supported, throw an error.
             logger::alert(
                 "FATAL",
-                "Unknown \"PLATFORM\" value.".to_string(),
-                "Either set it to \"radarr\", \"sonarr\", \"lidarr\", \"readarr\" or \"whisparr\"."
-                    .to_string(),
+                "Unknown \"PLATFORM\" value.",
+                "Either set it to \"radarr\", \"sonarr\", \"lidarr\", \"readarr\" or \"whisparr\".",
                 None,
             );
             system::exit(1);
@@ -98,9 +97,8 @@ pub fn queueapi(platform: &str, baseapi: &str, apikey: &str) -> String {
             // Supplied platform is not supported, throw an error.
             logger::alert(
                 "FATAL",
-                "Unknown \"PLATFORM\" value.".to_string(),
-                "Either set it to \"radarr\", \"sonarr\", \"lidarr\", \"readarr\" or \"whisparr\"."
-                    .to_string(),
+                "Unknown \"PLATFORM\" value.",
+                "Either set it to \"radarr\", \"sonarr\", \"lidarr\", \"readarr\" or \"whisparr\".",
                 None,
             );
             system::exit(1);

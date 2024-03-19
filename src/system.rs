@@ -39,8 +39,8 @@ pub fn env() -> Envs {
         apikey: env::var("APIKEY").unwrap_or_else(|_| {
             logger::alert(
                 "FATAL",
-                "ENV: \"APIKEY\" is undefined and required.".to_string(),
-                "There is no default value for this field.".to_string(),
+                "ENV: \"APIKEY\" is undefined and required.",
+                "There is no default value for this field.",
                 None,
             );
             exit(1);
@@ -86,9 +86,8 @@ pub fn env() -> Envs {
         Err(_) => {
             logger::alert(
                 "FATAL",
-                "Environment variable \"TIME_THRESHOLD\" is not valid.".to_string(),
-                "Must be a time-notation: \"1d\", \"6h\", \"30m\", etc.. by default: \"2h\""
-                    .to_string(),
+                "Environment variable \"TIME_THRESHOLD\" is not valid.",
+                "Must be a time-notation: \"1d\", \"6h\", \"30m\", etc.. by default: \"2h\"",
                 None,
             );
             system::exit(1);
@@ -103,9 +102,8 @@ pub fn env() -> Envs {
         Err(_) => {
             logger::alert(
                 "FATAL",
-                "Environment variable \"SIZE_THRESHOLD\" is not valid.".to_string(),
-                "Must be a bytesize-notation: \"1TB\", \"1GB\", \"1MB\", etc.. by default: \"25GB\""
-                    .to_string(),
+                "Environment variable \"SIZE_THRESHOLD\" is not valid.",
+                "Must be a bytesize-notation: \"1TB\", \"1GB\", \"1MB\", etc.. by default: \"25GB\"",
                 None,
             );
             system::exit(1);
@@ -120,9 +118,8 @@ pub fn env() -> Envs {
         Err(_) => {
             logger::alert(
                 "FATAL",
-                "Environment variable \"CHECK_INTERVAL\" is not valid.".to_string(),
-                "Must be a time-notation: \"1d\", \"6h\", \"30m\", etc.. by default: \"10m\""
-                    .to_string(),
+                "Environment variable \"CHECK_INTERVAL\" is not valid.",
+                "Must be a time-notation: \"1d\", \"6h\", \"30m\", etc.. by default: \"10m\"",
                 None,
             );
             system::exit(1);
