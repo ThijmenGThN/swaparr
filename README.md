@@ -13,7 +13,7 @@ Radarr, Sonarr and the other Starrs currently lack a built-in mechanism to handl
 
 If Swaparr has been helpful to you and you appreciate the power of open-source software, please consider giving this repository a star. Your gesture will greatly support our efforts and help others discover Swaparr!
 
-<iframe src="https://stars.devunltd.com/badge.html?user=thijmengthn&repo=swaparr&button=false&stargazers=true&theme=inline" frameborder="0" scrolling="0" width="250" height="50" title="Star on GitHub"></iframe>
+[![Stargazers](https://reporoster.com/stars/dark/notext/ThijmenGThN/swaparr)](https://github.com/ThijmenGThN/swaparr/stargazers)
 
 ## What is Swaparr?
 
