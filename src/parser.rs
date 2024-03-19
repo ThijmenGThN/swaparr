@@ -108,6 +108,7 @@ pub fn queueapi(platform: &str, baseapi: &str, apikey: &str) -> String {
     }
 }
 
+// This function extracts the name from a record based on the provided platform.
 pub fn recordname(platform: &str, record: &queue::Record) -> String {
     let mut title: &str = match platform {
         "radarr" => match record.movie.as_ref() {
