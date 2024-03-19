@@ -11,17 +11,19 @@ struct Response {
 }
 
 #[derive(Deserialize)]
-struct Record {
+pub struct Record {
     id: u32,
     size: f64,
-    movie: Option<NestedRecord>,
-    series: Option<NestedRecord>,
     timeleft: Option<String>,
+    pub movie: Option<NestedRecord>,
+    pub series: Option<NestedRecord>,
+    pub album: Option<NestedRecord>,
+    pub book: Option<NestedRecord>,
 }
 
 #[derive(Deserialize)]
-struct NestedRecord {
-    title: String,
+pub struct NestedRecord {
+    pub title: String,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -33,7 +35,7 @@ pub struct Torrent {
 }
 
 // Obtains Torrents from Radarr or Sonarr.
-pub fn get(url: &String, platform: &String) -> Vec<Torrent> {
+pub fn get(platform: &str, url: &str) -> Vec<Torrent> {
     // Request active torrents in queue from the Radarr or Sonarr API.
     let res: Response = match request::get(url) {
         // API can be reached.
@@ -44,8 +46,8 @@ pub fn get(url: &String, platform: &String) -> Vec<Torrent> {
             Err(error) => {
                 logger::alert(
                     "WARN",
-                    "Unable to process queue, will attempt again next run.".to_string(),
-                    "The API has responded with an invalid response.".to_string(),
+                    "Unable to process queue, will attempt again next run.",
+                    "The API has responded with an invalid response.",
                     Some(error.to_string()),
                 );
                 // Something went wrong, return an empty queue as fallback.
@@ -55,8 +57,8 @@ pub fn get(url: &String, platform: &String) -> Vec<Torrent> {
         Err(error) => {
             logger::alert(
                 "WARN",
-                "Unable to process queue, will attempt again next run.".to_string(),
-                "The connection to the API was unsuccessful.".to_string(),
+                "Unable to process queue, will attempt again next run.",
+                "The connection to the API was unsuccessful.",
                 Some(error.to_string()),
             );
             // Something went wrong, return an empty queue as fallback.
@@ -68,33 +70,18 @@ pub fn get(url: &String, platform: &String) -> Vec<Torrent> {
 
     // Iterate over all torrents.
     res.records.iter().for_each(|record| {
-        // Obtain HMS from timeleft attribute.
-        let timeleft = record.timeleft.clone().unwrap_or_else(|| "0".to_string());
-
-        // Convert timeleft from HMS to milliseconds.
-        let timeleft_ms = parser::string_hms_to_ms(&timeleft);
-
-        // Extract name from API record, if it fails return "Unknown".
-        let name: String = match platform.as_str() {
-            "radarr" => record
-                .movie
-                .as_ref()
-                .map(|nested| nested.title.clone())
-                .unwrap_or_else(|| String::from("Unknown")),
-            "sonarr" => record
-                .series
-                .as_ref()
-                .map(|nested| nested.title.clone())
-                .unwrap_or_else(|| String::from("Unknown")),
-            _ => String::from("Unknown"),
+        // Convert HMS from record to eta in milliseconds.
+        let eta = {
+            let timeleft = record.timeleft.clone().unwrap_or_else(|| "0".to_string());
+            parser::string_hms_to_ms(&timeleft)
         };
 
         // Add torrent to the list.
         torrents.push(Torrent {
             id: record.id,
-            name,
+            name: parser::recordname(&platform, &record),
             size: record.size as u64,
-            eta: timeleft_ms,
+            eta,
         });
     });
 
@@ -102,7 +89,12 @@ pub fn get(url: &String, platform: &String) -> Vec<Torrent> {
 }
 
 // Determines if the torrent is eligible to be striked.
-pub fn process(queue_items: Vec<Torrent>, strikelist: &mut HashMap<u32, u32>, env: &system::Envs) {
+pub fn process(
+    env: &system::Envs,
+    baseapi: &String,
+    queue_items: Vec<Torrent>,
+    strikelist: &mut HashMap<u32, u32>,
+) {
     // Table rows that will be pretty-printed to the terminal.
     let mut table_contents: Vec<render::TableContent> = vec![];
 
@@ -159,8 +151,8 @@ pub fn process(queue_items: Vec<Torrent>, strikelist: &mut HashMap<u32, u32>, en
             // Torrent meets set amount of strikes, a request to delete will be sent.
             if strikes >= env.strike_threshold {
                 delete(&format!(
-                    "{}/api/v3/queue/{}?blocklist=true&apikey={}",
-                    env.baseurl, id, env.apikey
+                    "{}queue/{}?blocklist=true&apikey={}",
+                    baseapi, id, env.apikey
                 ));
                 status = String::from("Removed");
             }
@@ -192,8 +184,8 @@ pub fn delete(url: &String) {
         Err(error) => {
             logger::alert(
                 "WARN",
-                "Failed to remove torrent, will attempt again next run.".to_string(),
-                "The API has refused this request.".to_string(),
+                "Failed to remove torrent, will attempt again next run.",
+                "The API has refused this request.",
                 Some(error.to_string()),
             );
         }

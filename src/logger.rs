@@ -6,7 +6,7 @@ pub fn empty() {
     );
 }
 
-pub fn alert(method: &str, title: String, message: String, error: Option<String>) {
+pub fn alert(method: &str, title: &str, message: &str, error: Option<String>) {
     println!("\n ─ {}", method);
     println!("╭─╮ {}", title);
     println!("╰─╯ {}", message);
@@ -26,4 +26,9 @@ pub fn banner(env: &system::Envs) {
     println!("│ │ Strike threshold: {}", &env.strike_threshold);
     println!("╰─╯ Aggresive strikes: {}", &env.aggresive_strikes);
     println!(" ─ Checking every: {}\n", env.check_interval);
+
+    // Open-Source = <3
+    println!("╭─╮ Has Swaparr been useful and do you like open-source projects?");
+    println!("│ │ Then please do consider to star the repository on GitHub.");
+    println!("╰─╯ Your gesture means a lot and will help improve Swaparr!\n");
 }

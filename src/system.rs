@@ -1,6 +1,6 @@
 use std::{env, process, thread::sleep, time::Duration};
 
-use crate::logger;
+use crate::{logger, parser, system};
 
 #[derive(Debug)]
 pub struct Envs {
@@ -33,13 +33,14 @@ pub fn exit(code: i32) -> ! {
 
 // Returns environment variables from the host.
 pub fn env() -> Envs {
-    Envs {
+    // Extract environment variables.
+    let envs = Envs {
         // ----- Unrecoverable -----
         apikey: env::var("APIKEY").unwrap_or_else(|_| {
             logger::alert(
                 "FATAL",
-                "ENV: \"APIKEY\" is undefined and required.".to_string(),
-                "There is no default value for this field.".to_string(),
+                "ENV: \"APIKEY\" is undefined and required.",
+                "There is no default value for this field.",
                 None,
             );
             exit(1);
@@ -75,5 +76,55 @@ pub fn env() -> Envs {
 
         check_interval: env::var("CHECK_INTERVAL")
             .unwrap_or_else(|_| default("CHECK_INTERVAL", "10m", false)),
+    };
+
+    // Check if variable TIME_THRESHOLD is able to be parsed.
+    match parser::string_time_notation_to_ms(&envs.time_threshold) {
+        // Variable can be parsed, thus valid.
+        Ok(_) => (),
+        // Variable could not be parsed, throw a fatal.
+        Err(_) => {
+            logger::alert(
+                "FATAL",
+                "Environment variable \"TIME_THRESHOLD\" is not valid.",
+                "Must be a time-notation: \"1d\", \"6h\", \"30m\", etc.. by default: \"2h\"",
+                None,
+            );
+            system::exit(1);
+        }
     }
+
+    // Check if variable SIZE_THRESHOLD is able to be parsed.
+    match parser::string_bytesize_to_bytes(&envs.size_threshold) {
+        // Variable can be parsed, thus valid.
+        Ok(_) => (),
+        // Variable could not be parsed, throw a fatal.
+        Err(_) => {
+            logger::alert(
+                "FATAL",
+                "Environment variable \"SIZE_THRESHOLD\" is not valid.",
+                "Must be a bytesize-notation: \"1TB\", \"1GB\", \"1MB\", etc.. by default: \"25GB\"",
+                None,
+            );
+            system::exit(1);
+        }
+    }
+
+    // Check if variable CHECK_INTERVAL is able to be parsed.
+    match parser::string_time_notation_to_ms(&envs.check_interval) {
+        // Variable can be parsed, thus valid.
+        Ok(_) => (),
+        // Variable could not be parsed, throw a fatal.
+        Err(_) => {
+            logger::alert(
+                "FATAL",
+                "Environment variable \"CHECK_INTERVAL\" is not valid.",
+                "Must be a time-notation: \"1d\", \"6h\", \"30m\", etc.. by default: \"10m\"",
+                None,
+            );
+            system::exit(1);
+        }
+    }
+
+    return envs;
 }
