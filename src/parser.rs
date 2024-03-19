@@ -4,7 +4,7 @@ use bytesize::ByteSize;
 use humantime::format_duration;
 use ms_converter;
 
-use crate::{logger, system};
+use crate::{logger, queue, system};
 
 // This will pretty-print an ETA from milliseconds.
 pub fn ms_to_eta_string(ms: &u64) -> String {
@@ -106,4 +106,36 @@ pub fn queueapi(platform: &str, baseapi: &str, apikey: &str) -> String {
             system::exit(1);
         }
     }
+}
+
+pub fn recordname(platform: &str, record: &queue::Record) -> String {
+    let mut title: &str = match platform {
+        "radarr" => match record.movie.as_ref() {
+            Some(movie) => &movie.title,
+            None => "Unknown",
+        },
+        "sonarr" => match record.series.as_ref() {
+            Some(series) => &series.title,
+            None => "Unknown",
+        },
+        "lidarr" => match record.album.as_ref() {
+            Some(album) => &album.title,
+            None => "Unknown",
+        },
+        "readarr" => match record.book.as_ref() {
+            Some(book) => &book.title,
+            None => "Unknown",
+        },
+        "whisparr" => match record.series.as_ref() {
+            Some(series) => &series.title,
+            None => "Unknown",
+        },
+        _ => "Unknown",
+    };
+
+    if title.is_empty() {
+        title = "Unknown"
+    }
+
+    String::from(title)
 }
