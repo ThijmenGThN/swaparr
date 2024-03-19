@@ -93,6 +93,15 @@ docker compose up -d
   ```
   docker compose down
   ```
+
+  
+  ### Update
+
+  To easily update Swaparr; pull the latest image and restart your containers:
+
+  ```
+  docker compose pull && docker compose down && docker compose up -d
+  ```
 </details>
 
 <details>
@@ -213,6 +222,27 @@ A brief rundown to shed light on a couple of things for you:
   | `Striked` | Flagged as slow or stalled, pending removal. |
   | `Removed` | Removed from Radarr / Sonarr. |
   | `Ignored` | Outside of threshold bounds. |
+</details>
+
+<details>
+  <summary>
+    <strong>Update Swaparr</strong> (with Docker)
+  </summary>
+
+  Updating Swaparr with Docker is a breeze. Just pull the latest image and restart your containers with the following simple steps:
+
+  ### Download the latest image
+
+  ```
+  docker compose pull
+  ```
+
+  ### Restart Swaparr
+
+  ```
+  docker compose down && docker compose up -d
+  ```
+
 </details>
 
 <details>
