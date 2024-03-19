@@ -13,6 +13,8 @@ Radarr, Sonarr and the other Starrs currently lack a built-in mechanism to handl
 
 If Swaparr has been helpful to you and you appreciate the power of open-source software, please consider giving this repository a star. Your gesture will greatly support our efforts and help others discover Swaparr!
 
+<iframe src="https://stars.devunltd.com/badge.html?user=thijmengthn&repo=swaparr&button=false&stargazers=true&theme=inline" frameborder="0" scrolling="0" width="250" height="50" title="Star on GitHub"></iframe>
+
 ## What is Swaparr?
 
 Swaparr quietly operates in the background, offering full customization options and clear visibility through console logs. Its primary function is to address the issue of stalled torrents in Radarr and Sonarr instances.
