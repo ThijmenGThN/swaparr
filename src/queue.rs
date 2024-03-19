@@ -14,8 +14,16 @@ struct Response {
 pub struct Record {
     id: u32,
     size: f64,
-    title: String,
     timeleft: Option<String>,
+    pub movie: Option<NestedRecord>,
+    pub series: Option<NestedRecord>,
+    pub album: Option<NestedRecord>,
+    pub book: Option<NestedRecord>,
+}
+
+#[derive(Deserialize)]
+pub struct NestedRecord {
+    pub title: String,
 }
 
 #[derive(Debug, Deserialize, Clone)]
@@ -27,7 +35,7 @@ pub struct Torrent {
 }
 
 // Obtains Torrents from Radarr or Sonarr.
-pub fn get(url: &String) -> Vec<Torrent> {
+pub fn get(platform: &str, url: &str) -> Vec<Torrent> {
     // Request active torrents in queue from the Radarr or Sonarr API.
     let res: Response = match request::get(url) {
         // API can be reached.
@@ -71,7 +79,7 @@ pub fn get(url: &String) -> Vec<Torrent> {
         // Add torrent to the list.
         torrents.push(Torrent {
             id: record.id,
-            name: record.title.clone(),
+            name: parser::recordname(&platform, &record),
             size: record.size as u64,
             eta,
         });
