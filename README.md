@@ -193,7 +193,7 @@ A brief rundown to shed light on a couple of things for you:
   |-------------------|----------------------|  -------------------------------------------------------------------------------------------------|
   | BASEURL           | `http://127.0.0.1:7878` | The URL of either a Sonarr or Radarr  instance.                                                |
   | APIKEY            | `7f3a8..cbc07`         | The API key required for accessing the Radarr or   Sonarr instance.                             |
-  | PLATFORM          | `radarr`              | Indicates the platform with which Swaparr interacts,  either `radarr` or `sonarr`.              |
+  | PLATFORM          | `radarr`              | Indicates the platform with which Swaparr interacts,  either `radarr`, `sonarr`, `lidarr`, `readarr` and `whisparr`.|
   | TIME_THRESHOLD    | `2h`                  | The duration threshold for torrents to be considered  stalled; torrents exceeding this limit will be removed. |
   | SIZE_THRESHOLD    | `25GB`                | The size limit for torrents to be ignored; torrents   exceeding this limit will not be processed. |
   | CHECK_INTERVAL    | `10m`                 | The interval at which Swaparr monitors  torrents.                                               |
