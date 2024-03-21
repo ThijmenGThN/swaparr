@@ -15,6 +15,6 @@ jobs:
       - name: Publish
         run: |
           docker login --username thijmengthn --password ${{ secrets.GH_PAT }} ghcr.io
-          docker build . --tag ghcr.io/thijmengthn/swaparr:latest --tag ghcr.io/thijmengthn/swaparr:${{ steps.get_version.outputs.VERSION }} --label "org.opencontainers.image.source=https://github.com/ThijmenGThN/swaparr" --label "org.opencontainers.image.description=A robust solution addressing stalled torrents in Radarr and Sonarr." --label "org.opencontainers.image.licenses=MIT"
+          docker build . --tag ghcr.io/thijmengthn/swaparr:latest --tag ghcr.io/thijmengthn/swaparr:${{ steps.get_version.outputs.VERSION }} --label "org.opencontainers.image.source=https://github.com/ThijmenGThN/swaparr" --label "org.opencontainers.image.description=This image of Swaparr is based on 'main', the stable release branch." --label "org.opencontainers.image.licenses=MIT"
           docker push ghcr.io/thijmengthn/swaparr:latest
           docker push ghcr.io/thijmengthn/swaparr:${{ steps.get_version.outputs.VERSION }}

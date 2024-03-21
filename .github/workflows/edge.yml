@@ -5,6 +5,20 @@ on:
     branches: [edge]
 
 jobs:
+  recycle:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - name: Recycle Edge Image
+      uses: rafalkk/remove-dockertag-action@v1
+      with:
+        tag_name: edge
+        github_token: ${{ secrets.GH_PAT }}
+
   publish:
     runs-on: ubuntu-latest
     steps:
@@ -12,6 +26,5 @@ jobs:
       - name: Publish
         run: |
           docker login --username thijmengthn --password ${{ secrets.GH_PAT }} ghcr.io
-          docker build . --tag ghcr.io/thijmengthn/swaparr:edge --tag ghcr.io/thijmengthn/swaparr:edge-${{ github.run_number }} --label "org.opencontainers.image.source=https://github.com/ThijmenGThN/swaparr" --label "org.opencontainers.image.description=Unstable release based on the Edge branch." --label "org.opencontainers.image.licenses=MIT"
+          docker build . --tag ghcr.io/thijmengthn/swaparr:edge --label "org.opencontainers.image.source=https://github.com/ThijmenGThN/swaparr" --label "org.opencontainers.image.description=This image of Swaparr is based on 'edge', the unstable release branch." --label "org.opencontainers.image.licenses=MIT"
           docker push ghcr.io/thijmengthn/swaparr:edge
-          docker push ghcr.io/thijmengthn/swaparr:edge-${{ github.run_number }}
