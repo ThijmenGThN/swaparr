@@ -14,7 +14,7 @@ jobs:
 
     steps:
     - name: Recycle Edge Image
-      uses: rafalkk/remove-dockertag-action@v1
+      uses: thijmengthn/ghcr-tagrm@0.1.2
       with:
         tag_name: edge
         github_token: ${{ secrets.GH_PAT }}
