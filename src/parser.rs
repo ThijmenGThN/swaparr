@@ -2,7 +2,6 @@ use std::time::Duration;
 
 use bytesize::ByteSize;
 use humantime::format_duration;
-use ms_converter;
 
 use crate::{logger, queue, system};
 
