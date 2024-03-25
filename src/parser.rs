@@ -26,7 +26,7 @@ pub fn string_bytesize_to_bytes(string: &String) -> Result<ByteSize, String> {
     string.parse::<ByteSize>()
 }
 
-// Converts human-readable string (from radarr or sonarr API) to milliseconds.
+// Converts human-readable string (from Starr API) to milliseconds.
 pub fn string_hms_to_ms(string: &String) -> u64 {
     let parts: Vec<&str> = string.split(|c| c == ':' || c == '.').collect();
 
