@@ -1,8 +1,8 @@
 # Swaparr
 
-Radarr, Sonarr and the other Starrs currently lack a built-in mechanism to handle stalled torrents, this project aims to solve that.
+Radarr, Sonarr and the other Starrs currently lack a built-in mechanism to handle stalled downloads, this project aims to solve that.
 
-> Swaparr is inspired by a Reddit thread ["I wrote a script that replaces slow/dead torrents automatically"](https://www.reddit.com/r/radarr/comments/101q31k/i_wrote_a_script_that_replaces_slowdead_torrents/) from [Douglas96](https://www.reddit.com/user/Douglas96/).
+> Swaparr is inspired by a Reddit thread ["I wrote a script that repl.."](https://www.reddit.com/r/radarr/comments/101q31k/i_wrote_a_script_that_replaces_slowdead_torrents/) from [Douglas96](https://www.reddit.com/user/Douglas96/).
 
 <p align="center">
   <img src="https://i.imgur.com/7D84ooQ.png?s=128">
@@ -17,12 +17,12 @@ If Swaparr has been helpful to you and you appreciate the power of open-source s
 
 ## What is Swaparr?
 
-Swaparr quietly operates in the background, offering full customization options and clear visibility through console logs. Its primary function is to address the issue of stalled torrents in Radarr and Sonarr instances.
+Swaparr quietly operates in the background, offering full customization options and clear visibility through console logs. Its primary function is to address the issue of stalled downloads in starr instances.
 
 ### Key Features:
 
-- **Automatic Detection:** Swaparr scans through all active torrents in your Radarr or Sonarr instances every 10 minutes (adjustable) to identify potential slowdowns indicating stalled torrents.
-- **Strike System:** Identified torrents are given a strike, and this evaluation cycle repeats periodically. If a torrent accumulates the maximum allowed strikes, Swaparr automatically removes it from your instance.
+- **Automatic Detection:** Swaparr scans through all active downloads in your starr instances every 10 minutes (adjustable) to identify potential slowdowns indicating.
+- **Strike System:** Identified downloads are given a strike, and this evaluation cycle repeats periodically. If a download accumulates the maximum allowed strikes, Swaparr automatically removes it from your instance.
 - **Customization:** Swaparr offers customization options such as time and size thresholds, strike thresholds, and the ability to toggle aggressive strike behavior.
 
 > Beware: Swaparr is still in beta, things might change before reaching version ` 1.0.0 `
@@ -82,7 +82,7 @@ docker compose up -d
 
   ### Monitor
 
-  You can monitor Swaparr's activities and track the processing of torrents by executing the following command. Omit the ` <platform> ` parameter to view logs for all platforms:
+  You can monitor Swaparr's activities and track the processing of downloads by executing the following command. Omit the ` <platform> ` parameter to view logs for all platforms:
 
   ```
   docker compose logs <platform>
@@ -202,14 +202,14 @@ A brief rundown to shed light on a couple of things for you:
 
   | Name              | Default              |  Description                                                                                     |
   |-------------------|----------------------|  -------------------------------------------------------------------------------------------------|
-  | BASEURL           | `http://127.0.0.1:7878` | The URL of either a Sonarr or Radarr  instance.                                                |
-  | APIKEY            | `7f3a8..cbc07`         | The API key required for accessing the Radarr or   Sonarr instance.                             |
-  | PLATFORM          | `radarr`              | Indicates the platform with which Swaparr interacts,  either `radarr`, `sonarr`, `lidarr`, `readarr` and `whisparr`.|
-  | TIME_THRESHOLD    | `2h`                  | The duration threshold for torrents to be considered  stalled; torrents exceeding this limit will be removed. |
-  | SIZE_THRESHOLD    | `25GB`                | The size limit for torrents to be ignored; torrents   exceeding this limit will not be processed. |
-  | CHECK_INTERVAL    | `10m`                 | The interval at which Swaparr monitors  torrents.                                               |
-  | STRIKE_THRESHOLD  | `3`                   | The number of strikes a torrent needs to reach  before it is subject to removal.                |
-  | AGGRESSIVE_STRIKES| `false`               | Enables the removal of stalled torrents and those   stuck fetching metadata.                      |
+  | BASEURL           | `http://127.0.0.1:7878` | The URL of a starr instance.                                                |
+  | APIKEY            | `7f3a8..cbc07`         | The API key required for accessing the starr instance.                             |
+  | PLATFORM          | `radarr`              | Indicates the platform with which Swaparr interacts,  either `radarr`, `sonarr`, `lidarr`, `readarr` or `whisparr`.|
+  | TIME_THRESHOLD    | `2h`                  | The duration threshold for downloads to be considered  stalled; downloads exceeding this limit will be removed. |
+  | SIZE_THRESHOLD    | `25GB`                | The size limit for downloads to be ignored; downloads   exceeding this limit will not be processed. |
+  | CHECK_INTERVAL    | `10m`                 | The interval at which Swaparr monitors  downloads.                                               |
+  | STRIKE_THRESHOLD  | `3`                   | The number of strikes a download needs to reach  before it is subject to removal.                |
+  | AGGRESSIVE_STRIKES| `false`               | Enables the removal of stalled downloads and those   stuck fetching metadata.                      |
 </details>
 
 <details>
@@ -222,7 +222,7 @@ A brief rundown to shed light on a couple of things for you:
   | `Normal`  | Not stalled or slow, will not be striked. |
   | `Pending` | Fetching metadata or stalled (can be bypassed with `aggressive_strikes`). |
   | `Striked` | Flagged as slow or stalled, pending removal. |
-  | `Removed` | Removed from Radarr / Sonarr. |
+  | `Removed` | Removed from its starr instance. |
   | `Ignored` | Outside of threshold bounds. |
 </details>
 
