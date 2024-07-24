@@ -34,9 +34,27 @@ pub struct Torrent {
     pub eta: u64,
 }
 
-// Obtains Torrents from Radarr or Sonarr.
+// Delete Torrent from Starr.
+pub fn delete(url: &String) {
+    // Send the request to delete to the API.
+    match request::Client::new().delete(url).send() {
+        // Should be deleted.
+        Ok(_) => (),
+        // Attempt to delete did not go through. (This should be attempted again next run)
+        Err(error) => {
+            logger::alert(
+                "WARN",
+                "Failed to remove torrent, will attempt again next run.",
+                "The API has refused this request.",
+                Some(error.to_string()),
+            );
+        }
+    }
+}
+
+// Obtains Torrents from Starr.
 pub fn get(platform: &str, url: &str) -> Vec<Torrent> {
-    // Request active torrents in queue from the Radarr or Sonarr API.
+    // Request active torrents in queue from the Starr API.
     let res: Response = match request::get(url) {
         // API can be reached.
         Ok(res) => match res.json() {
@@ -172,22 +190,4 @@ pub fn process(
 
     // Print table to terminal.
     render::table(&table_contents);
-}
-
-// -- Deletes Torrent from Radarr or Sonarr.
-pub fn delete(url: &String) {
-    // Send the request to delete to the API.
-    match request::Client::new().delete(url).send() {
-        // Should be deleted.
-        Ok(_) => (),
-        // Attempt to delete did not go through. (This should be attempted again next run)
-        Err(error) => {
-            logger::alert(
-                "WARN",
-                "Failed to remove torrent, will attempt again next run.",
-                "The API has refused this request.",
-                Some(error.to_string()),
-            );
-        }
-    }
 }
