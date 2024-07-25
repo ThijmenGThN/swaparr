@@ -15,16 +15,16 @@ RUN apt update
 RUN apt install -y libssl-dev musl-tools
 
 # Add musl target.
-RUN rustup target add x86_64-unknown-linux-musl
+RUN rustup target add $ARCH-unknown-linux-musl
 
 # Build Swaparr.
-RUN cargo build --release --target x86_64-unknown-linux-musl
+RUN cargo build --release --target $ARCH-unknown-linux-musl
 
 
 # ----- Package Stage -----
 FROM scratch
 
 # Copy Swaparr binary to scratch image.
-COPY --from=build /swaparr/target/x86_64-unknown-linux-musl/release/swaparr /swaparr
+COPY --from=build /swaparr/target/$ARCH-unknown-linux-musl/release/swaparr /swaparr
 
 CMD ["/swaparr"]
