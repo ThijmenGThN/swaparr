@@ -10,9 +10,9 @@ COPY Cargo* ./
 
 RUN cargo install --path .
 
-# ----- Package Stage -----
+# ----- Runtime Stage -----
 
-FROM scratch
+FROM scratch AS runtime
 
 COPY --from=build /usr/local/cargo/bin/swaparr /swaparr
 

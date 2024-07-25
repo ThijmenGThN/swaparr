@@ -5,22 +5,9 @@ on:
     branches: [edge]
 
 jobs:
-  recycle:
-    name: Recycle Edge Image
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - uses: chipkent/action-cleanup-package@v1.0.1
-        with:
-          tag: edge
-          github-token: ${{ secrets.GH_PAT }}
-          package-name: ${{ github.event.repository.name }}
-
   publish:
     name: Publish
-    runs-on: self-hosted
-    needs: [recycle]
-
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -28,17 +15,27 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
-      - name: Set up Docker Buildx
+      - name: Set up Buildx
         id: buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Build and push container image
+      - name: Build Dockerfile
         run: |
           echo ${{ secrets.GH_PAT }} | docker login --username thijmengthn --password-stdin ghcr.io
-          docker buildx build \
+          docker buildx build . \
             --tag ghcr.io/thijmengthn/swaparr:edge \
             --platform linux/amd64,linux/arm64 \
             --label "org.opencontainers.image.source=https://github.com/thijmengthn/swaparr" \
             --label "org.opencontainers.image.licenses=MIT" \
-            --label "org.opencontainers.image.description=This image of Swaparr is based on 'edge', the unstable release branch." .
-          docker push ghcr.io/thijmengthn/swaparr:edge
+            --label "org.opencontainers.image.description=This image of Swaparr is based on 'edge', the unstable release branch."
+          
+      - name: Recycle Image
+        uses: chipkent/action-cleanup-package@v1.0.1
+        continue-on-error: true
+        with:
+          tag: edge
+          github-token: ${{ secrets.GH_PAT }}
+          package-name: ${{ github.event.repository.name }}
+
+      - name: Push build to GHCR
+        run: docker push ghcr.io/thijmengthn/swaparr:edge
