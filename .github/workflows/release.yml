@@ -7,7 +7,7 @@ on:
 jobs:
   publish:
     name: Publish
-    runs-on: selfhosted
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v3
 
