@@ -8,7 +8,8 @@ WORKDIR /swaparr
 COPY src ./src
 COPY Cargo* ./
 
-RUN cargo install --path .
+RUN cargo install quickinstall
+RUN cargo quickinstall --path .
 
 # ----- Package Stage -----
 
