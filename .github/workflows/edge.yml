@@ -41,7 +41,6 @@ jobs:
             --push \
             --tag swaparr:edge \
             --platform linux/amd64,linux/arm64 \
-            --build-arg ARCH=amd64 --build-arg ARCH=arm64 \
             --label "org.opencontainers.image.source=https://github.com/thijmengthn/swaparr" \
             --label "org.opencontainers.image.licenses=MIT" \
             --label "org.opencontainers.image.description=This image of Swaparr is based on 'edge', the unstable release branch." .
