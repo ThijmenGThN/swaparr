@@ -22,7 +22,7 @@ jobs:
     needs: [recycle]
 
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up QEMU
@@ -39,9 +39,9 @@ jobs:
         run: |
           docker buildx build \
             --push \
-            --tag swaparr:edge \
+            --tag ghcr.io/${{ github.repository_owner }}/swaparr:edge \
             --platform linux/amd64,linux/arm64 \
-            --build-arg ARCH=amd64 --build-arg ARCH=arm64 \
-            --label "org.opencontainers.image.source=https://github.com/thijmengthn/swaparr" \
+            --build-arg ARCH=amd64 \
+            --label "org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
             --label "org.opencontainers.image.licenses=MIT" \
             --label "org.opencontainers.image.description=This image of Swaparr is based on 'edge', the unstable release branch." .
