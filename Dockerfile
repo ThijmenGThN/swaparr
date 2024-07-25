@@ -8,12 +8,12 @@ WORKDIR /swaparr
 COPY src ./src
 COPY Cargo* ./
 
-RUN cargo install --path .
+RUN cargo build --release --bin swaparr
 
 # ----- Runtime Stage -----
 
 FROM scratch AS runtime
 
-COPY --from=build /usr/local/cargo/bin/swaparr /swaparr
+COPY --from=build /swaparr/target/release/swaparr /swaparr
 
 CMD ["/swaparr"]
