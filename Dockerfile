@@ -1,6 +1,6 @@
 
 # ----- Build Stage -----
-FROM rust:1.76-bookworm AS build
+FROM rust:1-bookworm AS build
 
 WORKDIR /swaparr
 
