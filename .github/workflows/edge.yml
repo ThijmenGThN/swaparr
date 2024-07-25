@@ -39,9 +39,9 @@ jobs:
         run: |
           docker buildx build \
             --push \
-            --tag ghcr.io/${{ github.repository_owner }}/swaparr:edge \
+            --tag swaparr:edge \
             --platform linux/amd64,linux/arm64 \
-            --build-arg ARCH=amd64 \
-            --label "org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
+            --build-arg ARCH=amd64 --build-arg ARCH=aarch64 \
+            --label "org.opencontainers.image.source=https://github.com/thijmengthn/swaparr" \
             --label "org.opencontainers.image.licenses=MIT" \
             --label "org.opencontainers.image.description=This image of Swaparr is based on 'edge', the unstable release branch." .
