@@ -18,7 +18,7 @@ jobs:
 
   publish:
     name: Publish
-    runs-on: ubuntu-latest
+    runs-on: selfhosted
     needs: [recycle]
 
     steps:
@@ -36,9 +36,9 @@ jobs:
         run: |
           docker login --username thijmengthn --password ${{ secrets.GH_PAT }} ghcr.io
           docker buildx build \
-            --push \
             --tag ghcr.io/thijmengthn/swaparr:edge \
             --platform linux/amd64,linux/arm64 \
             --label "org.opencontainers.image.source=https://github.com/thijmengthn/swaparr" \
             --label "org.opencontainers.image.licenses=MIT" \
-            --label "org.opencontainers.image.description=This image of Swaparr is based on 'edge', the unstable release branch." .
+            --label "org.opencontainers.image.description=This image of Swaparr is based on 'edge', the unstable release branch."
+          docker push ghcr.io/thijmengthn/swaparr:edge
