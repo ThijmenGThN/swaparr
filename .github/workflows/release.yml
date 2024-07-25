@@ -23,11 +23,11 @@ jobs:
         run: |
           echo ${{ secrets.GH_PAT }} | docker login --username thijmengthn --password-stdin ghcr.io
           docker buildx build . \
-            --tag ghcr.io/thijmengthn/swaparr:latest \
-            --tag ghcr.io/thijmengthn/swaparr:${{ steps.get_version.outputs.VERSION }} \
+            --tag swaparr:latest \
+            --tag swaparr:${{ steps.get_version.outputs.VERSION }} \
             --platform linux/amd64,linux/arm64 \
-            --label "org.opencontainers.image.source=https://github.com/thijmengthn/swaparr" \
             --label "org.opencontainers.image.licenses=MIT" \
+            --label "org.opencontainers.image.source=https://github.com/thijmengthn/swaparr" \
             --label "org.opencontainers.image.description=This image of Swaparr is based on 'main', the stable release branch."
 
       - id: get_version
