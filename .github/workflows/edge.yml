@@ -40,7 +40,7 @@ jobs:
           docker buildx build \
             --push \
             --tag swaparr:edge \
-            --platform linux/amd64,linux/i386,linux/arm/v6,linux/arm64 \
+            --platform linux/amd64,linux/386,linux/arm64,linux/arm/v7 \
             --label "org.opencontainers.image.source=https://github.com/thijmengthn/swaparr" \
             --label "org.opencontainers.image.licenses=MIT" \
             --label "org.opencontainers.image.description=This image of Swaparr is based on 'edge', the unstable release branch." .
