@@ -17,7 +17,7 @@ RUN echo "openssl = { version = \"0.10\", features = [\"vendored\"] }" >> Cargo.
 
 # Install build tools.
 RUN apt update && apt install -y libssl-dev musl-tools
-RUN if [ "$ARCH" = "arm64" ]; then apt install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu; fi
+RUN if [ "$ARCH" = "arm64" ]; then apt install -y gcc-aarch64-linux-gnu; fi
 
 # Add musl target.
 RUN if [ "$ARCH" = "amd64" ]; then rustup target add x86_64-unknown-linux-musl; \
