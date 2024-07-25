@@ -29,9 +29,17 @@ Swaparr quietly operates in the background, offering full customization options 
 
 ## Getting Started
 
-In this section, we'll deploy Swaparr using Docker and its compose plugin.
+### Prerequisites 
 
-> Docker is not mandatory; you can also [run the binaries](#prerequisites) or compile Swaparr yourself. However, note that more advanced steps are required for these methods.
+Docker and it's compose plugin are required, below is a matrix on how to install both for your system:
+
+|Operating System|Official Instructions|
+|-|-|
+|Linux|[docs.docker.com/../linux-install](https://docs.docker.com/desktop/install/linux-install/)
+|MacOS|[docs.docker.com/.../mac-install](https://docs.docker.com/desktop/install/mac-install/)
+|Windows|[docs.docker.com/.../windows-install](https://docs.docker.com/desktop/install/windows-install/)
+
+### Configurations
 
 Start with the provided compose file as a foundation, and customize it by excluding or adjusting any services.
 
@@ -69,46 +77,57 @@ services:
       - AGGRESSIVE_STRIKES=false      # Boolean              (Optional) default: false 
 ```
 
+### Starting Swaparr
+
 To start Swaparr, run the following command:
 
 ```
 docker compose up -d
 ```
 
+### Monitor
+
+  You can monitor Swaparr's activities and track the processing of downloads by executing the following command. Omit the ` <container_name> ` parameter to view logs for all platforms:
+
+  ```
+  docker compose logs <container_name>
+  ```
+
 <details>
   <summary>
-    <strong>Basic Controls</strong>
+    <strong>Instructions:</strong> Stop or Update Swaparr
   </summary>
 
-  ### Monitor
+  #### Stop
 
-  You can monitor Swaparr's activities and track the processing of downloads by executing the following command. Omit the ` <platform> ` parameter to view logs for all platforms:
-
-  ```
-  docker compose logs <platform>
-  ```
-
-  ### Shutdown
-
-  To shut down Swaparr, execute the following command:
+  To shutdown Swaparr, run the following command:
 
   ```
   docker compose down
   ```
 
   
-  ### Update
+  #### Update
 
-  To easily update Swaparr; pull the latest image and restart your containers:
+  Updating Swaparr is a breeze, pull the latest images and restart the service:
 
   ```
-  docker compose pull && docker compose down && docker compose up -d
+  docker compose pull
   ```
+
+  ```
+  docker compose down
+  ```
+
+  ```
+  docker compose up -d
+  ```
+
 </details>
 
 <details>
   <summary>
-    <strong>We also support Lidarr, Readarr and Whisparr</strong> (Experimental)
+    <strong>Extended support:</strong> Lidarr, Readarr and Whisparr (Experimental) 
   </summary>
 
   ```yml
@@ -224,57 +243,6 @@ A brief rundown to shed light on a couple of things for you:
   | `Striked` | Flagged as slow or stalled, pending removal. |
   | `Removed` | Removed from its starr instance. |
   | `Ignored` | Outside of threshold bounds. |
-</details>
-
-<details>
-  <summary>
-    <strong>Update Swaparr</strong> (with Docker)
-  </summary>
-
-  Updating Swaparr with Docker is a breeze. Just pull the latest image and restart your containers with the following simple steps:
-
-  ### Download the latest image
-
-  ```
-  docker compose pull
-  ```
-
-  ### Restart Swaparr
-
-  ```
-  docker compose down && docker compose up -d
-  ```
-
-</details>
-
-<details>
-  <summary>
-    <strong>Getting Started</strong> (without Docker)
-  </summary>
-
-  #### Prerequisites
-
-  To begin, [download the executable](https://github.com/ThijmenGThN/swaparr/releases) compatible   with your operating system.
-
-  Before running Swaparr, manually set the required [environment variables](#environment-variables).
-
-  > Note: You do not need to define every environment variable; only the ones you need and those  that are required.
-
-  #### Powershell
-
-  ```
-  $Env:<variable>="<value>"
-  ```
-
-  #### Shell
-
-  ```
-  export <variable>="<value>"
-  ```
-
-  #### Run Swaparr
-
-  You should now be able to run Swaparr directly from the binary file.
 </details>
 
 ## ✨ Swaparr is for everyone!
