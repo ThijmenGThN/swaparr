@@ -3,17 +3,27 @@
 
 FROM rust:1-bookworm AS build
 
+ARG TARGETARCH
+
 WORKDIR /swaparr
 
 COPY src ./src
 COPY Cargo* ./
 
-RUN cargo build --release --bin swaparr
+RUN apt update && apt install -y libssl-dev musl-tools
+
+RUN case "$TARGETARCH" in \
+    "amd64") TARGET="x86_64-unknown-linux-musl" ;; \
+    "arm64") TARGET="aarch64-unknown-linux-gnu" ;; \
+    esac && \
+    rustup target add $TARGET && \
+    cargo build --release --target $TARGET && \
+    mv /swaparr/target/$TARGET/release/swaparr /opt
 
 # ----- Runtime Stage -----
 
 FROM scratch AS runtime
 
-COPY --from=build /swaparr/target/release/swaparr /swaparr
+COPY --from=build /opt/swaparr /
 
 CMD ["/swaparr"]
