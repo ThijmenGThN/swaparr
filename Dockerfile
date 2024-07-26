@@ -1,30 +1,19 @@
 
 # ----- Build Stage -----
-FROM rust:1.76-bookworm AS build
+
+FROM rust:1-bookworm AS build
 
 WORKDIR /swaparr
 
 COPY src ./src
 COPY Cargo* ./
 
-# Add OpenSSL dependency to cargo. (Required in musl build.)
-RUN echo "openssl = { version = \"0.10\", features = [\"vendored\"] }" >> Cargo.toml
+RUN cargo build --release --bin swaparr
 
-# Install buildtools.
-RUN apt update
-RUN apt install -y libssl-dev musl-tools
+# ----- Runtime Stage -----
 
-# Add musl target.
-RUN rustup target add x86_64-unknown-linux-musl
+FROM scratch AS runtime
 
-# Build Swaparr.
-RUN cargo build --release --target x86_64-unknown-linux-musl
-
-
-# ----- Package Stage -----
-FROM scratch
-
-# Copy Swaparr binary to scratch image.
-COPY --from=build /swaparr/target/x86_64-unknown-linux-musl/release/swaparr /swaparr
+COPY --from=build /swaparr/target/release/swaparr /swaparr
 
 CMD ["/swaparr"]

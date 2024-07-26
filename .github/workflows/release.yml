@@ -7,15 +7,26 @@ on:
 jobs:
   publish:
     name: Publish
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - id: get_version
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Obtain image tag
+        id: image_tag
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
-        
-      - run: |
-          docker login --username thijmengthn --password ${{ secrets.GH_PAT }} ghcr.io
-          docker build . --tag ghcr.io/thijmengthn/swaparr:latest --tag ghcr.io/thijmengthn/swaparr:${{ steps.get_version.outputs.VERSION }} --label "org.opencontainers.image.source=https://github.com/ThijmenGThN/swaparr" --label "org.opencontainers.image.description=This image of Swaparr is based on 'main', the stable release branch." --label "org.opencontainers.image.licenses=MIT"
-          docker push ghcr.io/thijmengthn/swaparr:latest
-          docker push ghcr.io/thijmengthn/swaparr:${{ steps.get_version.outputs.VERSION }}
+
+      - name: Build and push to GHCR
+        run: |
+          echo ${{ secrets.GH_PAT }} | docker login --username thijmengthn --password-stdin ghcr.io
+          docker buildx build --push \
+            --platform linux/amd64,linux/arm64 \
+            --tag ghcr.io/thijmengthn/swaparr:latest \
+            --tag ghcr.io/thijmengthn/swaparr:${{ steps.image_tag.outputs.VERSION }} .

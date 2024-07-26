@@ -1,11 +1,10 @@
-[[bin]]
-name = "swaparr"
-path = "src/main.rs"
 
 [package]
 name = "swaparr"
-version = "0.3.0"
 edition = "2021"
+authors = ["ThijmenGThN <mail@thijmenheuvelink.nl>"]
+repository = "https://github.com/ThijmenGThN/swaparr"
+description = "A robust solution addressing stalled downloads in Starr apps."
 
 [dependencies]
 tabled = { version = "0.15.0" }
