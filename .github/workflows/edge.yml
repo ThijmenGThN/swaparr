@@ -18,9 +18,6 @@ jobs:
     runs-on: self-hosted
     needs: recycle
     steps:
-      - id: vtags
-        run: echo ::set-output name=VTAG::${GITHUB_REF/refs\/tags\//}
-
       - uses: actions/checkout@v4
       - uses: docker/login-action@v3
         with:
