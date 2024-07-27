@@ -11,9 +11,9 @@ jobs:
       - uses: chipkent/action-cleanup-package@v1.0.1
         continue-on-error: true
         with:
-          github-token: ${{ secrets.GH_PAT }}
-          package-name: ghcr.io/thijmengthn/swaparr
           tag: edge
+          github-token: ${{ secrets.GH_PAT }}
+          package-name: ${{ github.event.repository.name }}
   publish:
     runs-on: self-hosted
     needs: recycle
