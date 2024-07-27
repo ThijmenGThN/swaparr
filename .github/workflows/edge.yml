@@ -4,18 +4,18 @@ on:
   push:
     branches: [edge]
 
-env:
-  REGISTRY_IMAGE: ghcr.io/thijmengthn/swaparr
-
 jobs:
-  build:
+  recycle:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        platform:
-          - linux/amd64
-          # - linux/arm64
+    steps:
+      - uses: chipkent/action-cleanup-package@v1.0.1
+        continue-on-error: true
+        with:
+          github-token: ${{ secrets.GH_PAT }}
+          package-name: thijmengthn/swaparr
+          tag: edge
+  publish:
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-qemu-action@v3
@@ -25,10 +25,8 @@ jobs:
           registry: ghcr.io
           username: thijmengthn
           password: ${{ secrets.GH_PAT }}
-
-      - name: Build and push to GHCR
+      - name: Build and publish to GHCR
         run: |
-          echo ${{ secrets.GH_PAT }} | docker login --username thijmengthn --password-stdin ghcr.io
           docker buildx build --push \
-            --platform ${{ matrix.platform }}\
+            --platform linux/amd64,linux/arm64 \
             --tag ghcr.io/thijmengthn/swaparr:edge .
