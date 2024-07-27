@@ -15,7 +15,7 @@ jobs:
           github-token: ${{ secrets.GH_PAT }}
           package-name: ${{ github.event.repository.name }}
   publish:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     needs: recycle
     steps:
       - uses: actions/checkout@v4
