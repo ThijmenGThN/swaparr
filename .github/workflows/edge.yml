@@ -6,7 +6,6 @@ on:
 
 jobs:
   build:
-    name: Build and push multi-arch images.
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -23,12 +22,10 @@ jobs:
       - uses: docker/build-push-action@v5
         with:
           push: true
-          provenance: false
           platforms: linux/${{ matrix.platform }}
           tags: ghcr.io/thijmengthn/swaparr:edge-${{ matrix.platform }}
 
   merge:
-    name: Merge multi-arch images into one manifest.
     runs-on: ubuntu-latest
     needs: [build]
     steps:
@@ -43,14 +40,3 @@ jobs:
             --tag ghcr.io/thijmengthn/swaparr:edge \
             ghcr.io/thijmengthn/swaparr:edge-arm64 \
             ghcr.io/thijmengthn/swaparr:edge-amd64
-
-  cleanup:
-    name: Clean up untagged, unreferenced images.
-    runs-on: ubuntu-latest
-    needs: [merge]
-    steps:
-      - uses: pcasteran/ghcr-cleaning-action@v1.4.0
-        with:
-          package: swaparr
-          user: thijmengthn
-          password: ${{ secrets.GH_PAT }}
