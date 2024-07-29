@@ -21,8 +21,7 @@ jobs:
     needs: recycle-archtags
     strategy:
       matrix:
-        tag: [amd64, arm64]
-        platform: [linux/amd64, linux/arm64]
+        platform: [amd64, arm64]
     steps:
       - uses: actions/checkout@v4
       - uses: docker/login-action@v3
@@ -36,8 +35,8 @@ jobs:
       - uses: docker/build-push-action@v5
         with:
           push: true
-          platforms: ${{ matrix.platform }}
-          tags: ghcr.io/thijmengthn/swaparr:edge-${{ matrix.tag }}
+          platforms: linux/${{ matrix.platform }}
+          tags: ghcr.io/thijmengthn/swaparr:edge-${{ matrix.platform }}
 
   recycle-maintag:
     runs-on: ubuntu-latest
