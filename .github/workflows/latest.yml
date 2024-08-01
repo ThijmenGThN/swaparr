@@ -1,14 +1,21 @@
-name: Publish to GitHub Container Registry
+name: Publish containers to GHCR
 
 on:
   push:
-    tags: 
-      - "*"
+    tags: "*"
 
 jobs:
+  clean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dataaxiom/ghcr-cleanup-action@v1
+        with:
+          token: ${{ secrets.GH_PAT }}
+          
   publish:
     name: Publish Latest
     runs-on: ubuntu-latest
+    needs: clean
 
     steps:
       - uses: actions/checkout@v4

@@ -1,14 +1,21 @@
-name: Publish to GitHub Container Registry
+name: Publish containers to GHCR
 
 on:
   push:
-    branches: [edge]
-
+    branches: edge
 
 jobs:
+  clean:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: dataaxiom/ghcr-cleanup-action@v1
+        with:
+          token: ${{ secrets.GH_PAT }}
+
   publish:
     name: Publish Edge
     runs-on: ubuntu-latest
+    needs: clean
 
     steps:
       - uses: actions/checkout@v4
@@ -24,4 +31,3 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: ghcr.io/thijmengthn/swaparr:edge
-    
