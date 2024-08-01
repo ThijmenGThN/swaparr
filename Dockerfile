@@ -14,7 +14,7 @@ RUN apt update && apt install -y libssl-dev musl-tools
 
 RUN case "$TARGETARCH" in \
     "linux/amd64") TARGET="x86_64-unknown-linux-musl" ;; \
-    "linux/arm/v6") TARGET="aarch64-unknown-linux-gnu" ;; \
+    "linux/arm/v7") TARGET="aarch64-unknown-linux-gnu" ;; \
     esac && \
     rustup target add $TARGET && \
     cargo build --release --target $TARGET && \
