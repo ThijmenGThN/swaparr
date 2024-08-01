@@ -10,6 +10,7 @@ WORKDIR /swaparr
 COPY src ./src
 COPY Cargo* ./
 
+RUN date -s "$(wget -qSO- --max-redirect=0 google.com 2>&1 | grep Date: | cut -d' ' -f5-8)Z"
 RUN apt update && apt install -y libssl-dev musl-tools
 
 RUN case "$TARGETARCH" in \
