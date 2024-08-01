@@ -2,12 +2,12 @@ name: Publish to GitHub Container Registry
 
 on:
   push:
-    branches: [edge]
-
+    tags: 
+      - "*"
 
 jobs:
   publish:
-    name: Publish Edge
+    name: Publish Latest
     runs-on: ubuntu-latest
 
     steps:
@@ -23,5 +23,6 @@ jobs:
         with:
           push: true
           platforms: linux/amd64,linux/arm64
-          tags: ghcr.io/thijmengthn/swaparr:edge
-    
+          tags: |
+            ghcr.io/thijmengthn/swaparr:latest
+            ghcr.io/thijmengthn/swaparr:${{ github.ref_name }}
