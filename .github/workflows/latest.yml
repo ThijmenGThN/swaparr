@@ -5,18 +5,9 @@ on:
     tags: "*"
 
 jobs:
-  clean:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: dataaxiom/ghcr-cleanup-action@v1
-        with:
-          token: ${{ secrets.GH_PAT }}
-          
   publish:
     name: Publish Latest
     runs-on: ubuntu-latest
-    needs: clean
-
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-qemu-action@v3
@@ -33,3 +24,12 @@ jobs:
           tags: |
             ghcr.io/thijmengthn/swaparr:latest
             ghcr.io/thijmengthn/swaparr:${{ github.ref_name }}
+
+  clean:
+    name: Clean untagged containers
+    runs-on: ubuntu-latest
+    needs: publish
+    steps:
+      - uses: dataaxiom/ghcr-cleanup-action@v1
+        with:
+          token: ${{ secrets.GH_PAT }}
