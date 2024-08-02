@@ -1,19 +1,6 @@
 
-# ----- Build Stage -----
+FROM alpine:3.12
 
-FROM rust:1-bookworm AS build
+COPY ./swaparr /usr/local/bin
 
-WORKDIR /swaparr
-
-COPY src ./src
-COPY Cargo* ./
-
-RUN cargo build --release --bin swaparr
-
-# ----- Runtime Stage -----
-
-FROM scratch AS runtime
-
-COPY --from=build /swaparr/target/release/swaparr /swaparr
-
-CMD ["/swaparr"]
+CMD ["swaparr"]
