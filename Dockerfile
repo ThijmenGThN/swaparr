@@ -4,6 +4,7 @@
 FROM rust:1-bookworm AS build
 
 ARG TARGETARCH
+ENV CROSS_CONTAINER_IN_CONTAINER=true
 
 WORKDIR /swaparr
 
