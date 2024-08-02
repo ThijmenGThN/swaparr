@@ -60,7 +60,6 @@ jobs:
         id: push
         with:
           context: .
-          file: ./Dockerfile
           platforms: ${{ matrix.platform.docker }}
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=image,name=${{ env.REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
@@ -98,7 +97,8 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY_IMAGE }}
-          tags: type=edge
+          tags: |
+            type=edge
       
       - name: Login to Registry
         uses: docker/login-action@v3
