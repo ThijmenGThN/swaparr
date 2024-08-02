@@ -9,6 +9,7 @@ env:
 
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -27,13 +28,19 @@ jobs:
           platform=${{ matrix.platform.docker }}
           echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV          
           
-      - name: Build (Test via Cross)
+      - name: Build binary with cross
         run: |
           export CROSS_NO_WARNINGS=0
           curl https://sh.rustup.rs -sSf | sh -s -- -y
           cargo install cross --git https://github.com/cross-rs/cross
           cross build --release --target ${{ matrix.platform.cross }}
           mv target/${{ matrix.platform.cross }}/release/swaparr .
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: swaparr
+          path: ./swaparr
 
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v3
@@ -54,15 +61,21 @@ jobs:
         with:
           images: ${{ env.REGISTRY_IMAGE }}
       
-      - name: Push by digest
+      - name: Download binary artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: swaparr
+          path: ./swaparr
+
+      - name: Build container and push by digest
         uses: docker/build-push-action@v6
         id: push
         with:
+          context: .
+          file: ./Dockerfile
           platforms: ${{ matrix.platform.docker }}
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=image,name=${{ env.REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
-          build-args: |
-            - TARGET_PATH=${{ matrix.platform.cross }}
       
       - name: Export digest
         run: |
