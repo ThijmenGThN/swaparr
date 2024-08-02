@@ -11,7 +11,7 @@ WORKDIR /swaparr
 COPY src ./src
 COPY Cargo* ./
 
-RUN cargo install cross --git https://github.com/cross-rs/cross
+RUN cargo install cross
 
 RUN cross build --release --target $TARGET 
 
