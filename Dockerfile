@@ -4,14 +4,19 @@
 FROM rust:1-bookworm AS build
 
 ARG TARGETARCH
-ENV CROSS_CONTAINER_IN_CONTAINER=true
 
 WORKDIR /swaparr
 
 COPY src ./src
 COPY Cargo* ./
 
-RUN cargo install cross
+RUN apt update && apt install -y libssl-dev musl-tools
+
+RUN case "$TARGETARCH" in \
+    "amd64") ;; \
+    "arm") RUN apt install -y aarch64-linux-gnu-gcc ;; \
+    *) echo "Unsupported architecture: $TARGETARCH" && exit 1 ;; \
+    esac
 
 RUN case "$TARGETARCH" in \
     "amd64") TARGET="x86_64-unknown-linux-musl" ;; \
@@ -19,9 +24,8 @@ RUN case "$TARGETARCH" in \
     *) echo "Unsupported architecture: $TARGETARCH" && exit 1 ;; \
     esac && \
     rustup target add $TARGET && \
-    cross cargo build --release --target $TARGET && \
+    cargo build --release --target $TARGET && \
     mv /swaparr/target/$TARGET/release/swaparr /opt
-
 
 # ----- Runtime Stage -----
 
