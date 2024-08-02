@@ -1,7 +1,7 @@
 
 # ----- Build Stage -----
 
-FROM rust:1-bookworm AS build
+FROM rust:1 AS build
 
 ARG TARGETARCH
 ENV CROSS_CONTAINER_IN_CONTAINER=true
