@@ -11,7 +11,10 @@ COPY src ./src
 COPY Cargo* ./
 
 RUN apt update 
-RUN apt install -y libssl-dev musl-tools docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+RUN apt install -y libssl-dev musl-tools
+
+RUN curl -fsSL https://get.docker.com -o get-docker.sh
+RUN sh get-docker.sh
 
 RUN cargo install cross
 
