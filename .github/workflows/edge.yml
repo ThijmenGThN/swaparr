@@ -15,7 +15,7 @@ jobs:
       matrix:
         platform:
           - linux/amd64
-          - linux/arm/v8
+          - linux/arm/v7
     steps:
       - name: Prepare
         run: |
