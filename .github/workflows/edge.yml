@@ -36,12 +36,6 @@ jobs:
           cross build --release --target ${{ matrix.platform.cross }}
           mv target/${{ matrix.platform.cross }}/release/swaparr .
 
-      - name: Upload binary artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: swaparr
-          path: ./swaparr
-
       - name: Setup QEMU
         uses: docker/setup-qemu-action@v3
 
@@ -61,12 +55,6 @@ jobs:
         with:
           images: ${{ env.REGISTRY_IMAGE }}
       
-      - name: Download binary artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: swaparr
-          path: ./swaparr
-
       - name: Build container and push by digest
         uses: docker/build-push-action@v6
         id: push
