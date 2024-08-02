@@ -1,6 +1,6 @@
 
-FROM scratch
+FROM alpine:3.12
 
-COPY ./swaparr /
+COPY ./swaparr /usr/local/bin
 
-CMD ["/swaparr"]
+CMD ["swaparr"]
