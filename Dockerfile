@@ -5,7 +5,7 @@ FROM rust:1-bookworm AS build
 
 ARG TARGETARCH
 
-WORKDIR /swaparr
+WORKDIR /usr/swaparr
 
 COPY src ./src
 COPY Cargo* ./
@@ -17,11 +17,11 @@ RUN cargo install cross
 
 RUN case "$TARGETARCH" in \
     "amd64") TARGET="x86_64-unknown-linux-musl" ;; \
-    "arm") TARGET="aarch64-unknown-linux-gnu" ;; \
+    "arm") TARGET="aarch64-unknown-linux-musl" ;; \
     *) echo "Unsupported architecture: $TARGETARCH" && exit 1 ;; \
     esac && \
     cross build --release --target $TARGET && \
-    mv /swaparr/target/$TARGET/release/swaparr /opt
+    mv /usr/swaparr/target/$TARGET/release/swaparr /opt
 
 # ----- Runtime Stage -----
 
