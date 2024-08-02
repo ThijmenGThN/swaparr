@@ -14,7 +14,7 @@ RUN apt update && apt install -y libssl-dev musl-tools
 
 RUN case "$TARGETARCH" in \
     "amd64") ;; \
-    "arm") RUN apt install -y aarch64-linux-gnu-gcc ;; \
+    "arm") apt install -y aarch64-linux-gnu-gcc ;; \
     *) echo "Unsupported architecture: $TARGETARCH" && exit 1 ;; \
     esac
 
