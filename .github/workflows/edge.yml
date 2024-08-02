@@ -13,9 +13,15 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     steps:
-      - uses: dataaxiom/ghcr-cleanup-action@v1
+      - uses: Chizkiyahu/delete-untagged-ghcr-action@v3
         with:
           token: ${{ secrets.GH_PAT }}
+          repository: ${{ github.repository }}
+          repository_owner: ${{ github.repository_owner }}
+          package_name: 'swaparr'
+          untagged_only: true
+          except_untagged_multiplatform: true
+          owner_type: 'user'
 
   build:
     name: Build
