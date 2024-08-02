@@ -79,6 +79,7 @@ jobs:
           retention-days: 1
 
   merge:
+    name: Merge
     runs-on: ubuntu-latest
     needs: build
     steps:
@@ -110,7 +111,7 @@ jobs:
       - name: Create manifest list and push
         working-directory: /tmp/digests
         run: |
-          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "${{steps.meta.outputs.json}}") \
             $(printf '${{ env.REGISTRY_IMAGE }}@sha256:%s ' *)          
       
       - name: Inspect image
