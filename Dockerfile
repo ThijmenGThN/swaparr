@@ -1,30 +1,33 @@
 
 # ----- Build Stage -----
 
-FROM rust:1-bookworm AS build
+# FROM rust:1-bookworm AS build
 
-ARG TARGETARCH
+# ARG TARGETARCH
 
-ENV CROSS_CONTAINER_IN_CONTAINER=true
-ENV CROSS_CONTAINER_ENGINE=podman
+# ENV CROSS_CONTAINER_IN_CONTAINER=true
+# ENV CROSS_CONTAINER_ENGINE=podman
 
-WORKDIR /swaparr
+# WORKDIR /swaparr
 
-COPY src ./src
-COPY Cargo* ./
+# COPY src ./src
+# COPY Cargo* ./
 
-RUN apt update
-RUN apt install -y podman
+# RUN apt update
+# RUN apt install -y podman
 
-RUN cargo install cross
-RUN cross build --release --target $TARGET 
+# RUN cargo install cross
+# RUN cross build --release --target $TARGET 
 
-RUN mv /swaparr/target/$TARGET/release/swaparr /opt
+# RUN mv /swaparr/target/$TARGET/release/swaparr /opt
 
 # ----- Runtime Stage -----
 
-FROM scratch AS runtime
+FROM scratch
 
-COPY --from=build /opt/swaparr /
+# COPY --from=build /opt/swaparr /
+
+ARG TARGETARCH
+COPY ./target/$TARGETARCH/release/swaparr /
 
 CMD ["/swaparr"]
