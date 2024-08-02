@@ -11,13 +11,11 @@ jobs:
   clean:
     name: Clean
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - uses: dataaxiom/ghcr-cleanup-action@v1
         with:
           token: ${{ secrets.GH_PAT }}
-          owner: thijmengthn
-          repository: swaparr
-          package: swaparr
 
   build:
     name: Build
