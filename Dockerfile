@@ -11,7 +11,7 @@ COPY src ./src
 COPY Cargo* ./
 
 RUN apt update 
-RUN apt install -y libssl-dev musl-tools podman
+RUN apt install -y libssl-dev musl-tools docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 
 RUN cargo install cross
 
