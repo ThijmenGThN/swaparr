@@ -8,25 +8,9 @@ env:
   REGISTRY_IMAGE: ghcr.io/thijmengthn/swaparr
 
 jobs:
-  clean:
-    name: Clean
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - uses: Chizkiyahu/delete-untagged-ghcr-action@v3
-        with:
-          token: ${{ secrets.GH_PAT }}
-          repository: ${{ github.repository }}
-          repository_owner: ${{ github.repository_owner }}
-          package_name: 'swaparr'
-          untagged_only: true
-          except_untagged_multiplatform: true
-          owner_type: 'user'
-
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: clean
     strategy:
       fail-fast: false
       matrix:
@@ -133,3 +117,20 @@ jobs:
       - name: Inspect image
         run: |
           docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}   
+
+  clean:
+    name: Clean
+    needs: merge
+    if: always()
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: Chizkiyahu/delete-untagged-ghcr-action@v3
+        with:
+          token: ${{ secrets.GH_PAT }}
+          repository: ${{ github.repository }}
+          repository_owner: ${{ github.repository_owner }}
+          package_name: 'swaparr'
+          untagged_only: true
+          except_untagged_multiplatform: true
+          owner_type: 'user'
