@@ -21,12 +21,7 @@ jobs:
             cross: aarch64-unknown-linux-gnu
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Prepare Environment
-        run: |
-          platform=${{ matrix.platform.docker }}
-          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV          
+        uses: actions/checkout@v4       
           
       - name: Build binary with cross
         run: |
@@ -70,6 +65,11 @@ jobs:
           digest="${{ steps.push.outputs.digest }}"
           touch "/tmp/digests/${digest#sha256:}"          
       
+      - name: Store Platform Pair
+        run: |
+          platform=${{ matrix.platform.docker }}
+          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV   
+
       - name: Upload digest
         uses: actions/upload-artifact@v4
         with:
@@ -98,8 +98,6 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY_IMAGE }}
-          tags: |
-            type=edge
       
       - name: Login to Registry
         uses: docker/login-action@v3
@@ -111,8 +109,9 @@ jobs:
       - name: Create manifest list and push
         working-directory: /tmp/digests
         run: |
-          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "${{steps.meta.outputs.json}}") \
-            $(printf '${{ env.REGISTRY_IMAGE }}@sha256:%s ' *)          
+          docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
+            $(printf '${{ env.REGISTRY_IMAGE }}@sha256:%s ' *) \
+            --tag edge   
       
       - name: Inspect image
         run: |
