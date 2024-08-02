@@ -45,6 +45,7 @@ jobs:
       
       - name: Build (Test via Cross)
         run: |
+          export CROSS_NO_WARNINGS=0
           curl https://sh.rustup.rs -sSf | sh -s -- -y
           cargo install cross --git https://github.com/cross-rs/cross
           cross build --release --target ${{ matrix.os.target }}
