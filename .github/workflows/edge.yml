@@ -98,7 +98,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY_IMAGE }}
-          tags: 
+          tags: |
             type=raw,value=edge
       
       - name: Login to Registry
