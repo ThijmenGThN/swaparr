@@ -21,18 +21,18 @@ fn main() {
     // Displays initial "banner" with set configurations.
     logger::banner(&env);
 
-    // List of striked torrents.
+    // List of striked downloads.
     let mut strikelist: HashMap<u32, u32> = HashMap::new();
 
     // Main striker-runtime thread.
     loop {
-        // Get all active torrents from the queue.
+        // Get all active downloads from the queue.
         let queue_items = queue::get(&env.platform, &queueapi);
 
-        // Cleanup torrents that no longer exists in the strikelist.
+        // Cleanup downloads that no longer exists in the strikelist.
         strikelist.retain(|&k, _| queue_items.iter().any(|item| item.id == k));
 
-        // Process torrents in the queue, a table with details will also be printed.
+        // Process downloads in the queue, a table with details will also be printed.
         queue::process(&env, &baseapi, queue_items, &mut strikelist);
 
         println!(" ─ Checking again in {}..\n", &env.check_interval);

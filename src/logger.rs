@@ -2,7 +2,7 @@ use crate::system;
 
 pub fn empty() {
     println!(
-        "\n╭───────────────────────────────────────────────────────────────────────────╮\n│                            No torrents found                              │\n╰───────────────────────────────────────────────────────────────────────────╯\n",
+        "\n╭──────────────────────────────────────────────────────────────────────────╮\n│                            No downloads found                            │\n╰──────────────────────────────────────────────────────────────────────────╯\n",
     );
 }
 
@@ -27,7 +27,7 @@ pub fn banner(env: &system::Envs) {
     println!("╰─╯ Aggresive strikes: {}", &env.aggresive_strikes);
     println!(" ─ Checking every: {}\n", env.check_interval);
 
-    // Open-Source = <3
+    // Open-Source = ❤️
     println!("╭─╮ Has Swaparr been useful and do you like open-source projects?");
     println!("│ │ Then please do consider to star the repository on GitHub.");
     println!("╰─╯ Your gesture means a lot and will help improve Swaparr!\n");

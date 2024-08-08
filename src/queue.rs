@@ -27,14 +27,14 @@ pub struct NestedRecord {
 }
 
 #[derive(Debug, Deserialize, Clone)]
-pub struct Torrent {
+pub struct Download {
     pub id: u32,
     pub name: String,
     pub size: u64,
     pub eta: u64,
 }
 
-// Delete Torrent from Starr.
+// Delete Download from Starr.
 pub fn delete(url: &String) {
     // Send the request to delete to the API.
     match request::Client::new().delete(url).send() {
@@ -44,7 +44,7 @@ pub fn delete(url: &String) {
         Err(error) => {
             logger::alert(
                 "WARN",
-                "Failed to remove torrent, will attempt again next run.",
+                "Failed to remove download, will attempt again next run.",
                 "The API has refused this request.",
                 Some(error.to_string()),
             );
@@ -52,9 +52,9 @@ pub fn delete(url: &String) {
     }
 }
 
-// Obtains Torrents from Starr.
-pub fn get(platform: &str, url: &str) -> Vec<Torrent> {
-    // Request active torrents in queue from the Starr API.
+// Obtains Sownloads from Starr.
+pub fn get(platform: &str, url: &str) -> Vec<Download> {
+    // Request active downloads in queue from the Starr API.
     let res: Response = match request::get(url) {
         // API can be reached.
         Ok(res) => match res.json() {
@@ -84,9 +84,9 @@ pub fn get(platform: &str, url: &str) -> Vec<Torrent> {
         }
     };
 
-    let mut torrents: Vec<Torrent> = vec![];
+    let mut downloads: Vec<Download> = vec![];
 
-    // Iterate over all torrents.
+    // Iterate over all downloads.
     res.records.iter().for_each(|record| {
         // Convert HMS from record to eta in milliseconds.
         let eta = {
@@ -94,8 +94,8 @@ pub fn get(platform: &str, url: &str) -> Vec<Torrent> {
             parser::string_hms_to_ms(&timeleft)
         };
 
-        // Add torrent to the list.
-        torrents.push(Torrent {
+        // Add download to the list.
+        downloads.push(Download {
             id: record.id,
             name: parser::recordname(&platform, &record),
             size: record.size as u64,
@@ -103,25 +103,25 @@ pub fn get(platform: &str, url: &str) -> Vec<Torrent> {
         });
     });
 
-    torrents
+    downloads
 }
 
-// Determines if the torrent is eligible to be striked.
+// Determines if the download is eligible to be striked.
 pub fn process(
     env: &system::Envs,
     baseapi: &String,
-    queue_items: Vec<Torrent>,
+    queue_items: Vec<Download>,
     strikelist: &mut HashMap<u32, u32>,
 ) {
     // Table rows that will be pretty-printed to the terminal.
     let mut table_contents: Vec<render::TableContent> = vec![];
 
-    // Loop over all active torrents from the queue.
-    for torrent in queue_items {
-        let id = torrent.id.clone();
+    // Loop over all active downloads from the queue.
+    for download in queue_items {
+        let id = download.id.clone();
         let mut status = String::from("Normal");
 
-        // Add torrent id to strikes with default "0" if it does not exist yet.
+        // Add download id to strikes with default "0" if it does not exist yet.
         let mut strikes: u32 = match strikelist.get(&id) {
             Some(strikes) => strikes.clone(),
             None => {
@@ -130,34 +130,34 @@ pub fn process(
             }
         };
 
-        // -- Bypass Rules -- Rules that define if a torrent is eligible to be striked.
+        // -- Bypass Rules -- Rules that define if a download is eligible to be striked.
 
         let mut bypass: bool = false;
 
-        // Torrent is being processed or the time is infinite.
-        if torrent.eta == 0 && !env.aggresive_strikes {
+        // Download is being processed or the time is infinite.
+        if download.eta == 0 && !env.aggresive_strikes {
             status = String::from("Pending");
             bypass = true;
         }
 
-        // Torrent is larger than set threshold. (Safe to unwrap, gets validated in health-check.)
+        // Download is larger than set threshold. (Safe to unwrap, gets validated in health-check.)
         let size_threshold_bytes = parser::string_bytesize_to_bytes(&env.size_threshold)
             .unwrap()
             .as_u64();
-        if torrent.size >= size_threshold_bytes {
+        if download.size >= size_threshold_bytes {
             status = String::from("Ignored");
             bypass = true;
         }
 
-        // -- Strike rules -- Rules that define when to strike a torrent.
+        // -- Strike rules -- Rules that define when to strike a download.
 
         if !bypass {
             // Extract timestamp from time notation. (Safe to unwrap, gets validated in health-check.)
             let time_threshold_ms =
                 parser::string_time_notation_to_ms(&env.time_threshold).unwrap() as u64;
 
-            // Torrent will take longer than set threshold.
-            if (torrent.eta >= time_threshold_ms) || (torrent.eta == 0 && env.aggresive_strikes) {
+            // Download will take longer than set threshold.
+            if (download.eta >= time_threshold_ms) || (download.eta == 0 && env.aggresive_strikes) {
                 // Increment strikes if it's below set maximum.
                 if strikes < env.strike_threshold {
                     strikes += 1;
@@ -166,7 +166,7 @@ pub fn process(
                 status = String::from("Striked");
             }
 
-            // Torrent meets set amount of strikes, a request to delete will be sent.
+            // Download meets set amount of strikes, a request to delete will be sent.
             if strikes >= env.strike_threshold {
                 delete(&format!(
                     "{}queue/{}?blocklist=true&apikey={}",
@@ -178,13 +178,13 @@ pub fn process(
 
         // -- Logging --
 
-        // Add torrent to pretty-print table.
+        // Add download to pretty-print table.
         table_contents.push(render::TableContent {
             strikes: format!("{}/{}", strikes, env.strike_threshold),
             status,
-            name: torrent.name.chars().take(32).collect::<String>(),
-            eta: parser::ms_to_eta_string(&torrent.eta),
-            size: format!("{:.2} GB", (torrent.size as f64 / 1000000000.0)).to_string(),
+            name: download.name.chars().take(32).collect::<String>(),
+            eta: parser::ms_to_eta_string(&download.eta),
+            size: format!("{:.2} GB", (download.size as f64 / 1000000000.0)).to_string(),
         })
     }
 
