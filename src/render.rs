@@ -11,7 +11,7 @@ pub struct TableContent {
     pub eta: String,
 }
 
-// Either prints a table containing Torrents or a "No torrents found" banner.
+// Either prints a table containing Download or a "No downloads found" banner.
 pub fn table(contents: &Vec<TableContent>) {
     if contents.len() > 0 {
         let mut table = Table::new(contents);
