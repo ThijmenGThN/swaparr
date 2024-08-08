@@ -21,13 +21,14 @@ Swaparr quietly operates in the background, offering full customization options 
 
 ### Key Features:
 
-- **Automatic Detection:** Swaparr scans through all active downloads in your starr instances every 10 minutes (adjustable) to identify potential slowdowns indicating.
+- **Automatic Detection:** Swaparr scans through all active downloads in your starr instances every 10 minutes (adjustable) to identify potential slowdowns.
 - **Strike System:** Identified downloads are given a strike, and this evaluation cycle repeats periodically. If a download accumulates the maximum allowed strikes, Swaparr automatically removes it from your instance.
 - **Customization:** Swaparr offers customization options such as time and size thresholds, strike thresholds, and the ability to toggle aggressive strike behavior.
 
-> Beware: Swaparr is still in beta, things might change before reaching version ` 1.0.0 `
-
 ## Getting Started
+
+> [!WARNING]
+> Swaparr is still in beta, things might change before reaching version ` 1.0.0 `
 
 ### Prerequisites 
 
