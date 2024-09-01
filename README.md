@@ -23,7 +23,7 @@ Swaparr quietly operates in the background, offering full customization options 
 
 - **Automatic Detection:** Swaparr scans through all active downloads in your starr instances every 10 minutes (adjustable) to identify potential slowdowns.
 - **Strike System:** Identified downloads are given a strike, and this evaluation cycle repeats periodically. If a download accumulates the maximum allowed strikes, Swaparr automatically removes it from your instance.
-- **Customization:** Swaparr offers customization options such as time and size thresholds, strike thresholds, and the ability to toggle aggressive strike behavior.
+- **Customization:** Swaparr offers customization options such as time, size and strike thresholds.
 
 ## Getting Started
 
@@ -60,7 +60,6 @@ services:
       - SIZE_THRESHOLD=25GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
       - CHECK_INTERVAL=10m            # 1d, 6h, 30m, etc..   (Optional) default: 10m   
       - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3     
-      - AGGRESSIVE_STRIKES=false      # Boolean              (Optional) default: false 
 
   # -- (Optional)
   sonarr: 
@@ -75,7 +74,6 @@ services:
       - SIZE_THRESHOLD=25GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
       - CHECK_INTERVAL=10m            # 1d, 6h, 30m, etc..   (Optional) default: 10m   
       - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3     
-      - AGGRESSIVE_STRIKES=false      # Boolean              (Optional) default: false 
 ```
 
 ### Starting Swaparr
@@ -147,7 +145,6 @@ docker compose up -d
         - SIZE_THRESHOLD=25GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
         - CHECK_INTERVAL=10m            # 1d, 6h, 30m, etc..   (Optional) default: 10m   
         - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3     
-        - AGGRESSIVE_STRIKES=false      # Boolean              (Optional) default: false 
 
     # -- (Optional)
     sonarr: 
@@ -162,7 +159,6 @@ docker compose up -d
         - SIZE_THRESHOLD=25GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
         - CHECK_INTERVAL=10m            # 1d, 6h, 30m, etc..   (Optional) default: 10m   
         - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3     
-        - AGGRESSIVE_STRIKES=false      # Boolean              (Optional) default: false 
 
     # -- (Optional)
     lidarr: 
@@ -177,7 +173,6 @@ docker compose up -d
         - SIZE_THRESHOLD=25GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
         - CHECK_INTERVAL=10m            # 1d, 6h, 30m, etc..   (Optional) default: 10m   
         - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3     
-        - AGGRESSIVE_STRIKES=false      # Boolean              (Optional) default: false 
 
     # -- (Optional)
     readarr: 
@@ -192,7 +187,6 @@ docker compose up -d
         - SIZE_THRESHOLD=25GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
         - CHECK_INTERVAL=10m            # 1d, 6h, 30m, etc..   (Optional) default: 10m   
         - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3     
-        - AGGRESSIVE_STRIKES=false      # Boolean              (Optional) default: false 
 
     # -- (Optional)
     whisparr: 
@@ -207,7 +201,6 @@ docker compose up -d
         - SIZE_THRESHOLD=25GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
         - CHECK_INTERVAL=10m            # 1d, 6h, 30m, etc..   (Optional) default: 10m   
         - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3     
-        - AGGRESSIVE_STRIKES=false      # Boolean              (Optional) default: false 
   ```
 </details>
 
@@ -229,7 +222,6 @@ A brief rundown to shed light on a couple of things for you:
   | SIZE_THRESHOLD    | `25GB`                | The size limit for downloads to be ignored; downloads   exceeding this limit will not be processed. |
   | CHECK_INTERVAL    | `10m`                 | The interval at which Swaparr monitors  downloads.                                               |
   | STRIKE_THRESHOLD  | `3`                   | The number of strikes a download needs to reach  before it is subject to removal.                |
-  | AGGRESSIVE_STRIKES| `false`               | Enables the removal of stalled downloads and those   stuck fetching metadata.                      |
 </details>
 
 <details>
@@ -240,7 +232,6 @@ A brief rundown to shed light on a couple of things for you:
   | Type | Meaning |
   | --- | --- |
   | `Normal`  | Not stalled or slow, will not be striked. |
-  | `Pending` | Fetching metadata or stalled (can be bypassed with `aggressive_strikes`). |
   | `Striked` | Flagged as slow or stalled, pending removal. |
   | `Removed` | Removed from its starr instance. |
   | `Ignored` | Outside of threshold bounds. |

@@ -134,12 +134,6 @@ pub fn process(
 
         let mut bypass: bool = false;
 
-        // Download is being processed or the time is infinite.
-        if download.eta == 0 && !env.aggresive_strikes {
-            status = String::from("Pending");
-            bypass = true;
-        }
-
         // Download is larger than set threshold. (Safe to unwrap, gets validated in health-check.)
         let size_threshold_bytes = parser::string_bytesize_to_bytes(&env.size_threshold)
             .unwrap()
@@ -157,7 +151,7 @@ pub fn process(
                 parser::string_time_notation_to_ms(&env.time_threshold).unwrap() as u64;
 
             // Download will take longer than set threshold.
-            if (download.eta >= time_threshold_ms) || (download.eta == 0 && env.aggresive_strikes) {
+            if download.eta >= time_threshold_ms {
                 // Increment strikes if it's below set maximum.
                 if strikes < env.strike_threshold {
                     strikes += 1;
