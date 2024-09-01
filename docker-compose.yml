@@ -13,7 +13,6 @@ services:
       - SIZE_THRESHOLD=25GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
       - CHECK_INTERVAL=10m            # 1d, 6h, 30m, etc..   (Optional) default: 10m   
       - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3     
-      - AGGRESSIVE_STRIKES=false      # Boolean              (Optional) default: false 
       
   # -- (Optional)
   sonarr:
@@ -28,4 +27,3 @@ services:
       - SIZE_THRESHOLD=25GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
       - CHECK_INTERVAL=10m            # 1d, 6h, 30m, etc..   (Optional) default: 10m   
       - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3     
-      - AGGRESSIVE_STRIKES=false      # Boolean              (Optional) default: false

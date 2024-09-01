@@ -23,8 +23,7 @@ pub fn banner(env: &system::Envs) {
     println!("╭─╮ Platform: {}", &env.platform);
     println!("│ │ Time threshold: {}", &env.time_threshold);
     println!("│ │ Size threshold: {}", &env.size_threshold);
-    println!("│ │ Strike threshold: {}", &env.strike_threshold);
-    println!("╰─╯ Aggresive strikes: {}", &env.aggresive_strikes);
+    println!("╰─╯ Strike threshold: {}", &env.strike_threshold);
     println!(" ─ Checking every: {}\n", env.check_interval);
 
     // Open-Source = ❤️

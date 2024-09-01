@@ -8,7 +8,6 @@ pub struct Envs {
     pub apikey: String,
     pub platform: String,
     pub strike_threshold: u32,
-    pub aggresive_strikes: bool,
     pub time_threshold: String,
     pub size_threshold: String,
     pub check_interval: String,
@@ -53,14 +52,6 @@ pub fn env() -> Envs {
             .unwrap_or_else(|_| {
                 default("STRIKE_THRESHOLD", "3", true);
                 3 // Needs non-String type as default.
-            }),
-
-        aggresive_strikes: env::var("AGGRESSIVE_STRIKES")
-            .unwrap_or_else(|_| default("AGGRESSIVE_STRIKES", "false", false))
-            .parse::<bool>()
-            .unwrap_or_else(|_| {
-                default("AGGRESSIVE_STRIKES", "false", true);
-                false // Needs non-String type as default.
             }),
 
         baseurl: env::var("BASEURL")
