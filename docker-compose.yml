@@ -1,4 +1,4 @@
-version: '3'
+
 services:
 
   radarr:
@@ -9,11 +9,11 @@ services:
       - BASEURL=http://127.0.0.1:7878 # IP or FQDN           (Required)
       - APIKEY=7f3a8..cbc07           # Sonarr API Key       (Required)                
       - PLATFORM=radarr               # "radarr" or "sonarr" (Optional) default: radarr
-      - TIME_THRESHOLD=2h             # 1d, 6h, 30m, etc..   (Optional) default: 2h    
-      - SIZE_THRESHOLD=25GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
-      - CHECK_INTERVAL=10m            # 1d, 6h, 30m, etc..   (Optional) default: 10m   
-      - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3     
-      
+      - MAX_STRIKES=3                 # Positive number      (Optional) default: 3     
+      - SCAN_INTERVAL=10m             # 1d, 6h, 30m, etc..   (Optional) default: 10m   
+      - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
+      - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
+
   # -- (Optional)
   sonarr:
     image: ghcr.io/thijmengthn/swaparr:latest
@@ -23,7 +23,7 @@ services:
       - BASEURL=http://127.0.0.1:8989 # IP or FQDN           (Required)
       - APIKEY=7f3a8..cbc07           # Sonarr API Key       (Required)                
       - PLATFORM=sonarr               # "radarr" or "sonarr" (Optional) default: radarr
-      - TIME_THRESHOLD=2h             # 1d, 6h, 30m, etc..   (Optional) default: 2h    
-      - SIZE_THRESHOLD=25GB           # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
-      - CHECK_INTERVAL=10m            # 1d, 6h, 30m, etc..   (Optional) default: 10m   
-      - STRIKE_THRESHOLD=3            # Positive number      (Optional) default: 3     
+      - MAX_STRIKES=3                 # Positive number      (Optional) default: 3     
+      - SCAN_INTERVAL=10m             # 1d, 6h, 30m, etc..   (Optional) default: 10m   
+      - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
+      - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
