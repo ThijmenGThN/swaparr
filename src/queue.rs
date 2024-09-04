@@ -134,17 +134,11 @@ pub fn process(
 
         let mut bypass: bool = false;
 
-        // Download is being processed or the time is infinite.
-        if download.eta == 0 && !env.aggresive_strikes {
-            status = String::from("Pending");
-            bypass = true;
-        }
-
         // Download is larger than set threshold. (Safe to unwrap, gets validated in health-check.)
-        let size_threshold_bytes = parser::string_bytesize_to_bytes(&env.size_threshold)
+        let ignore_above_size_bytes = parser::string_bytesize_to_bytes(&env.ignore_above_size)
             .unwrap()
             .as_u64();
-        if download.size >= size_threshold_bytes {
+        if download.size >= ignore_above_size_bytes {
             status = String::from("Ignored");
             bypass = true;
         }
@@ -153,13 +147,13 @@ pub fn process(
 
         if !bypass {
             // Extract timestamp from time notation. (Safe to unwrap, gets validated in health-check.)
-            let time_threshold_ms =
-                parser::string_time_notation_to_ms(&env.time_threshold).unwrap() as u64;
+            let max_download_time_ms =
+                parser::string_time_notation_to_ms(&env.max_download_time).unwrap() as u64;
 
             // Download will take longer than set threshold.
-            if (download.eta >= time_threshold_ms) || (download.eta == 0 && env.aggresive_strikes) {
+            if download.eta >= max_download_time_ms {
                 // Increment strikes if it's below set maximum.
-                if strikes < env.strike_threshold {
+                if strikes < env.max_strikes {
                     strikes += 1;
                     strikelist.insert(id, strikes);
                 }
@@ -167,7 +161,7 @@ pub fn process(
             }
 
             // Download meets set amount of strikes, a request to delete will be sent.
-            if strikes >= env.strike_threshold {
+            if strikes >= env.max_strikes {
                 delete(&format!(
                     "{}queue/{}?blocklist=true&apikey={}",
                     baseapi, id, env.apikey
@@ -180,7 +174,7 @@ pub fn process(
 
         // Add download to pretty-print table.
         table_contents.push(render::TableContent {
-            strikes: format!("{}/{}", strikes, env.strike_threshold),
+            strikes: format!("{}/{}", strikes, env.max_strikes),
             status,
             name: download.name.chars().take(32).collect::<String>(),
             eta: parser::ms_to_eta_string(&download.eta),

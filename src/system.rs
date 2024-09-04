@@ -7,11 +7,10 @@ pub struct Envs {
     pub baseurl: String,
     pub apikey: String,
     pub platform: String,
-    pub strike_threshold: u32,
-    pub aggresive_strikes: bool,
-    pub time_threshold: String,
-    pub size_threshold: String,
-    pub check_interval: String,
+    pub max_strikes: u32,
+    pub scan_interval: String,
+    pub max_download_time: String,
+    pub ignore_above_size: String,
 }
 
 // Voids provided vars and returns a default value.
@@ -47,20 +46,15 @@ pub fn env() -> Envs {
         }),
 
         // ----- Recoverable via defaults -----
-        strike_threshold: env::var("STRIKE_THRESHOLD")
-            .unwrap_or_else(|_| default("STRIKE_THRESHOLD", "3", false))
+        max_strikes: env::var("MAX_STRIKES")
+            // Allow falling back onto STRIKE_THRESHOLD for backwards compatibility.
+            .or_else(|_| env::var("STRIKE_THRESHOLD"))
+            .unwrap_or_else(|_| default("MAX_STRIKES", "3", false))
+            // Convert to u32, if it fails, use default u32.
             .parse::<u32>()
             .unwrap_or_else(|_| {
-                default("STRIKE_THRESHOLD", "3", true);
-                3 // Needs non-String type as default.
-            }),
-
-        aggresive_strikes: env::var("AGGRESSIVE_STRIKES")
-            .unwrap_or_else(|_| default("AGGRESSIVE_STRIKES", "false", false))
-            .parse::<bool>()
-            .unwrap_or_else(|_| {
-                default("AGGRESSIVE_STRIKES", "false", true);
-                false // Needs non-String type as default.
+                default("MAX_STRIKES", "3", true);
+                3 // default
             }),
 
         baseurl: env::var("BASEURL")
@@ -68,25 +62,31 @@ pub fn env() -> Envs {
 
         platform: env::var("PLATFORM").unwrap_or_else(|_| default("PLATFORM", "radarr", false)),
 
-        time_threshold: env::var("TIME_THRESHOLD")
-            .unwrap_or_else(|_| default("TIME_THRESHOLD", "2h", false)),
+        max_download_time: env::var("MAX_DOWNLOAD_TIME")
+            // Allow falling back onto TIME_THRESHOLD for backwards compatibility.
+            .or_else(|_| env::var("TIME_THRESHOLD"))
+            .unwrap_or_else(|_| default("MAX_DOWNLOAD_TIME", "2h", false)),
 
-        size_threshold: env::var("SIZE_THRESHOLD")
-            .unwrap_or_else(|_| default("SIZE_THRESHOLD", "25 GB", false)),
+        ignore_above_size: env::var("IGNORE_ABOVE_SIZE")
+            // Allow falling back onto SIZE_THRESHOLD for backwards compatibility.
+            .or_else(|_| env::var("SIZE_THRESHOLD"))
+            .unwrap_or_else(|_| default("IGNORE_ABOVE_SIZE", "25 GB", false)),
 
-        check_interval: env::var("CHECK_INTERVAL")
-            .unwrap_or_else(|_| default("CHECK_INTERVAL", "10m", false)),
+        scan_interval: env::var("SCAN_INTERVAL")
+            // Allow falling back onto CHECK_INTERVAL for backwards compatibility.
+            .or_else(|_| env::var("CHECK_INTERVAL"))
+            .unwrap_or_else(|_| default("SCAN_INTERVAL", "10m", false)),
     };
 
-    // Check if variable TIME_THRESHOLD is able to be parsed.
-    match parser::string_time_notation_to_ms(&envs.time_threshold) {
+    // Check if variable MAX_DOWNLOAD_TIME is able to be parsed.
+    match parser::string_time_notation_to_ms(&envs.max_download_time) {
         // Variable can be parsed, thus valid.
         Ok(_) => (),
         // Variable could not be parsed, throw a fatal.
         Err(_) => {
             logger::alert(
                 "FATAL",
-                "Environment variable \"TIME_THRESHOLD\" is not valid.",
+                "Environment variable \"MAX_DOWNLOAD_TIME\" is not valid.",
                 "Must be a time-notation: \"1d\", \"6h\", \"30m\", etc.. by default: \"2h\"",
                 None,
             );
@@ -94,15 +94,15 @@ pub fn env() -> Envs {
         }
     }
 
-    // Check if variable SIZE_THRESHOLD is able to be parsed.
-    match parser::string_bytesize_to_bytes(&envs.size_threshold) {
+    // Check if variable IGNORE_ABOVE_SIZE is able to be parsed.
+    match parser::string_bytesize_to_bytes(&envs.ignore_above_size) {
         // Variable can be parsed, thus valid.
         Ok(_) => (),
         // Variable could not be parsed, throw a fatal.
         Err(_) => {
             logger::alert(
                 "FATAL",
-                "Environment variable \"SIZE_THRESHOLD\" is not valid.",
+                "Environment variable \"IGNORE_ABOVE_SIZE\" is not valid.",
                 "Must be a bytesize-notation: \"1TB\", \"1GB\", \"1MB\", etc.. by default: \"25GB\"",
                 None,
             );
@@ -110,15 +110,15 @@ pub fn env() -> Envs {
         }
     }
 
-    // Check if variable CHECK_INTERVAL is able to be parsed.
-    match parser::string_time_notation_to_ms(&envs.check_interval) {
+    // Check if variable SCAN_INTERVAL is able to be parsed.
+    match parser::string_time_notation_to_ms(&envs.scan_interval) {
         // Variable can be parsed, thus valid.
         Ok(_) => (),
         // Variable could not be parsed, throw a fatal.
         Err(_) => {
             logger::alert(
                 "FATAL",
-                "Environment variable \"CHECK_INTERVAL\" is not valid.",
+                "Environment variable \"SCAN_INTERVAL\" is not valid.",
                 "Must be a time-notation: \"1d\", \"6h\", \"30m\", etc.. by default: \"10m\"",
                 None,
             );

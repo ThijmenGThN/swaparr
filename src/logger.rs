@@ -19,16 +19,16 @@ pub fn alert(method: &str, title: &str, message: &str, error: Option<String>) {
 }
 
 pub fn banner(env: &system::Envs) {
-    println!("\n ─ Swaparr");
+    println!("\n ── Swaparr ───── \n");
     println!("╭─╮ Platform: {}", &env.platform);
-    println!("│ │ Time threshold: {}", &env.time_threshold);
-    println!("│ │ Size threshold: {}", &env.size_threshold);
-    println!("│ │ Strike threshold: {}", &env.strike_threshold);
-    println!("╰─╯ Aggresive strikes: {}", &env.aggresive_strikes);
-    println!(" ─ Checking every: {}\n", env.check_interval);
-
+    println!("│ │ Max strikes: {}", &env.max_strikes);
+    println!("│ │ Scan interval: {}", env.scan_interval);
+    println!("│ │ Max download time: {}", &env.max_download_time);
+    println!("╰─╯ Ignore above size: {}\n", &env.ignore_above_size);
+    
     // Open-Source = ❤️
     println!("╭─╮ Has Swaparr been useful and do you like open-source projects?");
     println!("│ │ Then please do consider to star the repository on GitHub.");
-    println!("╰─╯ Your gesture means a lot and will help improve Swaparr!\n");
+    println!("╰─╯ Your gesture means a lot and will help improve Swaparr!");
+    println!("\n ──────────────── \n")
 }

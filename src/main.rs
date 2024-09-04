@@ -35,12 +35,12 @@ fn main() {
         // Process downloads in the queue, a table with details will also be printed.
         queue::process(&env, &baseapi, queue_items, &mut strikelist);
 
-        println!(" ─ Checking again in {}..\n", &env.check_interval);
+        println!(" ─ Checking again in {}..\n", &env.scan_interval);
 
-        // CHECK_INTERVAL sleeper for the main thread.
+        // SCAN_INTERVAL sleeper for the main thread.
         sleep(Duration::from_millis(
-            match parser::string_time_notation_to_ms(&env.check_interval) {
-                Ok(check_interval_ms) => check_interval_ms as u64,
+            match parser::string_time_notation_to_ms(&env.scan_interval) {
+                Ok(scan_interval_ms) => scan_interval_ms as u64,
                 Err(_) => 10 * 60 * 1000, // Using default, 10 minutes
             },
         ));
