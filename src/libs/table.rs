@@ -1,6 +1,6 @@
 use tabled::{settings::Style, Table, Tabled};
 
-use crate::logger;
+use crate::utils;
 
 #[derive(Tabled)]
 pub struct TableContent {
@@ -12,12 +12,12 @@ pub struct TableContent {
 }
 
 // Either prints a table containing Download or a "No downloads found" banner.
-pub fn table(contents: &Vec<TableContent>) {
+pub fn render(contents: &Vec<TableContent>) {
     if contents.len() > 0 {
         let mut table = Table::new(contents);
         table.with(Style::rounded());
         println!("{}", table.to_string())
     } else {
-        logger::empty();
+        utils::logger::empty();
     }
 }

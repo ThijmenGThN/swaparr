@@ -3,7 +3,7 @@ use std::time::Duration;
 use bytesize::ByteSize;
 use humantime::format_duration;
 
-use crate::{logger, queue, system};
+use crate::{queue, utils};
 
 // This will pretty-print an ETA from milliseconds.
 pub fn ms_to_eta_string(ms: &u64) -> String {
@@ -72,13 +72,13 @@ pub fn baseapi(platform: &str, baseurl: &str) -> String {
         "whisparr" => format!("{baseurl}/api/v3/"),
         _ => {
             // Supplied platform is not supported, throw an error.
-            logger::alert(
+            utils::logger::alert(
                 "FATAL",
                 "Unknown \"PLATFORM\" value.",
                 "Either set it to \"radarr\", \"sonarr\", \"lidarr\", \"readarr\" or \"whisparr\".",
                 None,
             );
-            system::exit(1);
+            utils::system::exit(1);
         }
     }
 }
@@ -94,13 +94,13 @@ pub fn queueapi(platform: &str, baseapi: &str, apikey: &str) -> String {
         "whisparr" => format!("{baseapi}queue?includeUnknownSeriesItems=true&includeSeries=true&includeEpisode=true&apikey={apikey}"),
         _ => {
             // Supplied platform is not supported, throw an error.
-            logger::alert(
+            utils::logger::alert(
                 "FATAL",
                 "Unknown \"PLATFORM\" value.",
                 "Either set it to \"radarr\", \"sonarr\", \"lidarr\", \"readarr\" or \"whisparr\".",
                 None,
             );
-            system::exit(1);
+            utils::system::exit(1);
         }
     }
 }

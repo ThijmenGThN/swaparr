@@ -1,4 +1,4 @@
-use crate::system;
+use crate::utils;
 
 pub fn empty() {
     println!(
@@ -18,14 +18,14 @@ pub fn alert(method: &str, title: &str, message: &str, error: Option<String>) {
     println!("\n");
 }
 
-pub fn banner(env: &system::Envs) {
+pub fn banner(env: &utils::system::Envs) {
     println!("\n ── Swaparr ───── \n");
     println!("╭─╮ Platform: {}", &env.platform);
     println!("│ │ Max strikes: {}", &env.max_strikes);
     println!("│ │ Scan interval: {}", env.scan_interval);
     println!("│ │ Max download time: {}", &env.max_download_time);
     println!("╰─╯ Ignore above size: {}\n", &env.ignore_above_size);
-    
+
     // Open-Source = ❤️
     println!("╭─╮ Has Swaparr been useful and do you like open-source projects?");
     println!("│ │ Then please do consider to star the repository on GitHub.");

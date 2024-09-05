@@ -1,6 +1,6 @@
 use std::{env, process, thread::sleep, time::Duration};
 
-use crate::{logger, parser, system};
+use crate::utils;
 
 #[derive(Debug)]
 pub struct Envs {
@@ -36,7 +36,7 @@ pub fn env() -> Envs {
     let envs = Envs {
         // ----- Unrecoverable -----
         apikey: env::var("APIKEY").unwrap_or_else(|_| {
-            logger::alert(
+            utils::logger::alert(
                 "FATAL",
                 "ENV: \"APIKEY\" is undefined and required.",
                 "There is no default value for this field.",
@@ -79,50 +79,50 @@ pub fn env() -> Envs {
     };
 
     // Check if variable MAX_DOWNLOAD_TIME is able to be parsed.
-    match parser::string_time_notation_to_ms(&envs.max_download_time) {
+    match utils::parse::string_time_notation_to_ms(&envs.max_download_time) {
         // Variable can be parsed, thus valid.
         Ok(_) => (),
         // Variable could not be parsed, throw a fatal.
         Err(_) => {
-            logger::alert(
+            utils::logger::alert(
                 "FATAL",
                 "Environment variable \"MAX_DOWNLOAD_TIME\" is not valid.",
                 "Must be a time-notation: \"1d\", \"6h\", \"30m\", etc.. by default: \"2h\"",
                 None,
             );
-            system::exit(1);
+            utils::system::exit(1);
         }
     }
 
     // Check if variable IGNORE_ABOVE_SIZE is able to be parsed.
-    match parser::string_bytesize_to_bytes(&envs.ignore_above_size) {
+    match utils::parse::string_bytesize_to_bytes(&envs.ignore_above_size) {
         // Variable can be parsed, thus valid.
         Ok(_) => (),
         // Variable could not be parsed, throw a fatal.
         Err(_) => {
-            logger::alert(
+            utils::logger::alert(
                 "FATAL",
                 "Environment variable \"IGNORE_ABOVE_SIZE\" is not valid.",
                 "Must be a bytesize-notation: \"1TB\", \"1GB\", \"1MB\", etc.. by default: \"25GB\"",
                 None,
             );
-            system::exit(1);
+            utils::system::exit(1);
         }
     }
 
     // Check if variable SCAN_INTERVAL is able to be parsed.
-    match parser::string_time_notation_to_ms(&envs.scan_interval) {
+    match utils::parse::string_time_notation_to_ms(&envs.scan_interval) {
         // Variable can be parsed, thus valid.
         Ok(_) => (),
         // Variable could not be parsed, throw a fatal.
         Err(_) => {
-            logger::alert(
+            utils::logger::alert(
                 "FATAL",
                 "Environment variable \"SCAN_INTERVAL\" is not valid.",
                 "Must be a time-notation: \"1d\", \"6h\", \"30m\", etc.. by default: \"10m\"",
                 None,
             );
-            system::exit(1);
+            utils::system::exit(1);
         }
     }
 

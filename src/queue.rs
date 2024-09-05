@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use reqwest::blocking as request;
 use serde::Deserialize;
 
-use crate::{logger, parser, render, system};
+use crate::{libs, utils};
 
 #[derive(Deserialize)]
 struct Response {
@@ -42,7 +42,7 @@ pub fn delete(url: &String) {
         Ok(_) => (),
         // Attempt to delete did not go through. (This should be attempted again next run)
         Err(error) => {
-            logger::alert(
+            utils::logger::alert(
                 "WARN",
                 "Failed to remove download, will attempt again next run.",
                 "The API has refused this request.",
@@ -62,7 +62,7 @@ pub fn get(platform: &str, url: &str) -> Vec<Download> {
             Ok(res) => res,
             // Did not respond with valid JSON.
             Err(error) => {
-                logger::alert(
+                utils::logger::alert(
                     "WARN",
                     "Unable to process queue, will attempt again next run.",
                     "The API has responded with an invalid response.",
@@ -73,7 +73,7 @@ pub fn get(platform: &str, url: &str) -> Vec<Download> {
             }
         },
         Err(error) => {
-            logger::alert(
+            utils::logger::alert(
                 "WARN",
                 "Unable to process queue, will attempt again next run.",
                 "The connection to the API was unsuccessful.",
@@ -91,13 +91,13 @@ pub fn get(platform: &str, url: &str) -> Vec<Download> {
         // Convert HMS from record to eta in milliseconds.
         let eta = {
             let timeleft = record.timeleft.clone().unwrap_or_else(|| "0".to_string());
-            parser::string_hms_to_ms(&timeleft)
+            utils::parse::string_hms_to_ms(&timeleft)
         };
 
         // Add download to the list.
         downloads.push(Download {
             id: record.id,
-            name: parser::recordname(&platform, &record),
+            name: utils::parse::recordname(&platform, &record),
             size: record.size as u64,
             eta,
         });
@@ -108,13 +108,13 @@ pub fn get(platform: &str, url: &str) -> Vec<Download> {
 
 // Determines if the download is eligible to be striked.
 pub fn process(
-    env: &system::Envs,
+    env: &utils::system::Envs,
     baseapi: &String,
     queue_items: Vec<Download>,
     strikelist: &mut HashMap<u32, u32>,
 ) {
     // Table rows that will be pretty-printed to the terminal.
-    let mut table_contents: Vec<render::TableContent> = vec![];
+    let mut table_contents: Vec<libs::table::TableContent> = vec![];
 
     // Loop over all active downloads from the queue.
     for download in queue_items {
@@ -135,9 +135,10 @@ pub fn process(
         let mut bypass: bool = false;
 
         // Download is larger than set threshold. (Safe to unwrap, gets validated in health-check.)
-        let ignore_above_size_bytes = parser::string_bytesize_to_bytes(&env.ignore_above_size)
-            .unwrap()
-            .as_u64();
+        let ignore_above_size_bytes =
+            utils::parse::string_bytesize_to_bytes(&env.ignore_above_size)
+                .unwrap()
+                .as_u64();
         if download.size >= ignore_above_size_bytes {
             status = String::from("Ignored");
             bypass = true;
@@ -148,7 +149,7 @@ pub fn process(
         if !bypass {
             // Extract timestamp from time notation. (Safe to unwrap, gets validated in health-check.)
             let max_download_time_ms =
-                parser::string_time_notation_to_ms(&env.max_download_time).unwrap() as u64;
+                utils::parse::string_time_notation_to_ms(&env.max_download_time).unwrap() as u64;
 
             // Download will take longer than set threshold.
             if download.eta >= max_download_time_ms {
@@ -173,15 +174,15 @@ pub fn process(
         // -- Logging --
 
         // Add download to pretty-print table.
-        table_contents.push(render::TableContent {
+        table_contents.push(libs::table::TableContent {
             strikes: format!("{}/{}", strikes, env.max_strikes),
             status,
             name: download.name.chars().take(32).collect::<String>(),
-            eta: parser::ms_to_eta_string(&download.eta),
+            eta: utils::parse::ms_to_eta_string(&download.eta),
             size: format!("{:.2} GB", (download.size as f64 / 1000000000.0)).to_string(),
         })
     }
 
     // Print table to terminal.
-    render::table(&table_contents);
+    libs::table::render(&table_contents);
 }

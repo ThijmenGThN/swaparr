@@ -1,25 +1,23 @@
 use std::{collections::HashMap, thread::sleep, time::Duration};
 
-mod health;
-mod logger;
-mod parser;
+mod libs;
 mod queue;
-mod render;
-mod system;
+mod tests;
+mod utils;
 
 fn main() {
     // Load environment variables.
-    let env = system::env();
+    let env = utils::system::env();
 
     // Get the base and queue api url based on the platform.
-    let baseapi = parser::baseapi(&env.platform, &env.baseurl);
-    let queueapi = parser::queueapi(&env.platform, &baseapi, &env.apikey);
+    let baseapi = utils::parse::baseapi(&env.platform, &env.baseurl);
+    let queueapi = utils::parse::queueapi(&env.platform, &baseapi, &env.apikey);
 
     // Health check the API, verbosely checks if a connection can be established.
-    health::api(&env.platform, &baseapi, &env.apikey);
+    tests::api::test(&env.platform, &baseapi, &env.apikey);
 
     // Displays initial "banner" with set configurations.
-    logger::banner(&env);
+    utils::logger::banner(&env);
 
     // List of striked downloads.
     let mut strikelist: HashMap<u32, u32> = HashMap::new();
@@ -39,7 +37,7 @@ fn main() {
 
         // SCAN_INTERVAL sleeper for the main thread.
         sleep(Duration::from_millis(
-            match parser::string_time_notation_to_ms(&env.scan_interval) {
+            match utils::parse::string_time_notation_to_ms(&env.scan_interval) {
                 Ok(scan_interval_ms) => scan_interval_ms as u64,
                 Err(_) => 10 * 60 * 1000, // Using default, 10 minutes
             },
