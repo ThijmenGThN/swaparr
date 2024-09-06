@@ -13,6 +13,7 @@ services:
       - SCAN_INTERVAL=10m             # 1d, 6h, 30m, etc..   (Optional) default: 10m   
       - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
       - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
+      - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
 
   # -- (Optional)
   sonarr:
@@ -27,3 +28,4 @@ services:
       - SCAN_INTERVAL=10m             # 1d, 6h, 30m, etc..   (Optional) default: 10m   
       - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
       - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
+      - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
