@@ -99,6 +99,8 @@ pub fn get(platform: &str, url: &str) -> Vec<Download> {
         };
 
         // Determine status of download.
+        // - Please inform me; if you have a different method 
+        //   on how to identify a download that is fetching metadata.
         let status = if let Some(error_message) = &record.errorMessage {
             if error_message.to_ascii_lowercase().contains("metadata") {
             "metadata".to_string()
