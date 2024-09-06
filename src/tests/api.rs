@@ -10,7 +10,7 @@ pub fn test(platform: &str, baseapi: &str, apikey: &str) {
             // Let's just assume that the APIKEY is
             // invalid if the code returned is not "200".
             if res.status() != 200 {
-                utils::logger::alert(
+                utils::log::alert(
                     "FATAL",
                     "The provided \"APIKEY\" is not valid.",
                     format!("Obtain the {platform} API key in Settings > General > API Key")
@@ -22,7 +22,7 @@ pub fn test(platform: &str, baseapi: &str, apikey: &str) {
         }
         // Could not be reached.
         Err(error) => {
-            utils::logger::alert(
+            utils::log::alert(
                 "FATAL",
                 format!("A connection to the {platform} API could not be established.").as_str(),
                 "Ensure that the API is accessible and try again.",

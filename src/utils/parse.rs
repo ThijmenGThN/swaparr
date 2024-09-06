@@ -72,7 +72,7 @@ pub fn baseapi(platform: &str, baseurl: &str) -> String {
         "whisparr" => format!("{baseurl}/api/v3/"),
         _ => {
             // Supplied platform is not supported, throw an error.
-            utils::logger::alert(
+            utils::log::alert(
                 "FATAL",
                 "Unknown \"PLATFORM\" value.",
                 "Either set it to \"radarr\", \"sonarr\", \"lidarr\", \"readarr\" or \"whisparr\".",
@@ -94,7 +94,7 @@ pub fn queueapi(platform: &str, baseapi: &str, apikey: &str) -> String {
         "whisparr" => format!("{baseapi}queue?includeUnknownSeriesItems=true&includeSeries=true&includeEpisode=true&apikey={apikey}"),
         _ => {
             // Supplied platform is not supported, throw an error.
-            utils::logger::alert(
+            utils::log::alert(
                 "FATAL",
                 "Unknown \"PLATFORM\" value.",
                 "Either set it to \"radarr\", \"sonarr\", \"lidarr\", \"readarr\" or \"whisparr\".",

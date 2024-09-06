@@ -37,7 +37,7 @@ pub fn env() -> Envs {
     let envs = Envs {
         // ----- Unrecoverable -----
         apikey: env::var("APIKEY").unwrap_or_else(|_| {
-            utils::logger::alert(
+            utils::log::alert(
                 "FATAL",
                 "ENV: \"APIKEY\" is undefined and required.",
                 "There is no default value for this field.",
@@ -93,7 +93,7 @@ pub fn env() -> Envs {
         Ok(_) => (),
         // Variable could not be parsed, throw a fatal.
         Err(_) => {
-            utils::logger::alert(
+            utils::log::alert(
                 "FATAL",
                 "Environment variable \"MAX_DOWNLOAD_TIME\" is not valid.",
                 "Must be a time-notation: \"1d\", \"6h\", \"30m\", etc.. by default: \"2h\"",
@@ -109,7 +109,7 @@ pub fn env() -> Envs {
         Ok(_) => (),
         // Variable could not be parsed, throw a fatal.
         Err(_) => {
-            utils::logger::alert(
+            utils::log::alert(
                 "FATAL",
                 "Environment variable \"IGNORE_ABOVE_SIZE\" is not valid.",
                 "Must be a bytesize-notation: \"1TB\", \"1GB\", \"1MB\", etc.. by default: \"25GB\"",
@@ -125,7 +125,7 @@ pub fn env() -> Envs {
         Ok(_) => (),
         // Variable could not be parsed, throw a fatal.
         Err(_) => {
-            utils::logger::alert(
+            utils::log::alert(
                 "FATAL",
                 "Environment variable \"SCAN_INTERVAL\" is not valid.",
                 "Must be a time-notation: \"1d\", \"6h\", \"30m\", etc.. by default: \"10m\"",

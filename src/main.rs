@@ -17,7 +17,7 @@ fn main() {
     tests::api::test(&env.platform, &baseapi, &env.apikey);
 
     // Displays initial "banner" with set configurations.
-    utils::logger::banner(&env);
+    utils::log::banner(&env);
 
     // List of striked downloads.
     let mut strikelist: HashMap<u32, u32> = HashMap::new();

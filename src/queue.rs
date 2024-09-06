@@ -46,7 +46,7 @@ pub fn delete(url: &String) {
         Ok(_) => (),
         // Attempt to delete did not go through. (This should be attempted again next run)
         Err(error) => {
-            utils::logger::alert(
+            utils::log::alert(
                 "WARN",
                 "Failed to remove download, will attempt again next run.",
                 "The API has refused this request.",
@@ -66,7 +66,7 @@ pub fn get(platform: &str, url: &str) -> Vec<Download> {
             Ok(res) => res,
             // Did not respond with valid JSON.
             Err(error) => {
-                utils::logger::alert(
+                utils::log::alert(
                     "WARN",
                     "Unable to process queue, will attempt again next run.",
                     "The API has responded with an invalid response.",
@@ -77,7 +77,7 @@ pub fn get(platform: &str, url: &str) -> Vec<Download> {
             }
         },
         Err(error) => {
-            utils::logger::alert(
+            utils::log::alert(
                 "WARN",
                 "Unable to process queue, will attempt again next run.",
                 "The connection to the API was unsuccessful.",

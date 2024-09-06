@@ -18,6 +18,6 @@ pub fn render(contents: &Vec<TableContent>) {
         table.with(Style::rounded());
         println!("{}", table.to_string())
     } else {
-        utils::logger::empty();
+        utils::log::empty();
     }
 }
