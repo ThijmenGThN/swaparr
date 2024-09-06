@@ -5,7 +5,7 @@ use crate::utils;
 #[derive(Tabled)]
 pub struct TableContent {
     pub strikes: String,
-    pub status: String,
+    pub state: String,
     pub name: String,
     pub size: String,
     pub eta: String,

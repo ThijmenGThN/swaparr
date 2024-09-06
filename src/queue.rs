@@ -15,6 +15,7 @@ pub struct Record {
     id: u32,
     size: f64,
     timeleft: Option<String>,
+    status: String,
     pub movie: Option<NestedRecord>,
     pub series: Option<NestedRecord>,
     pub album: Option<NestedRecord>,
@@ -31,6 +32,7 @@ pub struct Download {
     pub id: u32,
     pub name: String,
     pub size: u64,
+    pub status: String,
     pub eta: u64,
 }
 
@@ -99,7 +101,8 @@ pub fn get(platform: &str, url: &str) -> Vec<Download> {
             id: record.id,
             name: utils::parse::recordname(&platform, &record),
             size: record.size as u64,
-            eta,
+            status: record.status.clone(),
+            eta
         });
     });
 
@@ -119,7 +122,7 @@ pub fn process(
     // Loop over all active downloads from the queue.
     for download in queue_items {
         let id = download.id.clone();
-        let mut status = String::from("Normal");
+        let mut state = String::from("Normal");
 
         // Add download id to strikes with default "0" if it does not exist yet.
         let mut strikes: u32 = match strikelist.get(&id) {
@@ -140,7 +143,13 @@ pub fn process(
                 .unwrap()
                 .as_u64();
         if download.size >= ignore_above_size_bytes {
-            status = String::from("Ignored");
+            state = String::from("Ignored");
+            bypass = true;
+        }
+
+        // Download is queued and should not be processed.
+        if download.status == "queued" {
+            state = String::from("Queued");
             bypass = true;
         }
 
@@ -158,7 +167,7 @@ pub fn process(
                     strikes += 1;
                     strikelist.insert(id, strikes);
                 }
-                status = String::from("Striked");
+                state = String::from("Striked");
             }
 
             // Download meets set amount of strikes, a request to delete will be sent.
@@ -167,7 +176,7 @@ pub fn process(
                     "{}queue/{}?apikey={}&blocklist={}&removeFromClient={}",
                     baseapi, id, env.apikey, true, env.remove_from_client
                 ));
-                status = String::from("Removed");
+                state = String::from("Removed");
             }
         }
 
@@ -176,10 +185,10 @@ pub fn process(
         // Add download to pretty-print table.
         table_contents.push(libs::table::TableContent {
             strikes: format!("{}/{}", strikes, env.max_strikes),
-            status,
             name: download.name.chars().take(32).collect::<String>(),
             eta: utils::parse::ms_to_eta_string(&download.eta),
             size: format!("{:.2} GB", (download.size as f64 / 1000000000.0)).to_string(),
+            state,
         })
     }
 
