@@ -33,7 +33,6 @@ pub fn exit(code: i32) -> ! {
 
 // Returns environment variables from the host.
 pub fn env() -> Envs {
-    // Extract environment variables.
     let envs = Envs {
         // ----- Unrecoverable -----
         apikey: env::var("APIKEY").unwrap_or_else(|_| {
@@ -89,9 +88,7 @@ pub fn env() -> Envs {
 
     // Check if variable MAX_DOWNLOAD_TIME is able to be parsed.
     match utils::parse::string_time_notation_to_ms(&envs.max_download_time) {
-        // Variable can be parsed, thus valid.
         Ok(_) => (),
-        // Variable could not be parsed, throw a fatal.
         Err(_) => {
             utils::log::alert(
                 "FATAL",
@@ -105,9 +102,7 @@ pub fn env() -> Envs {
 
     // Check if variable IGNORE_ABOVE_SIZE is able to be parsed.
     match utils::parse::string_bytesize_to_bytes(&envs.ignore_above_size) {
-        // Variable can be parsed, thus valid.
         Ok(_) => (),
-        // Variable could not be parsed, throw a fatal.
         Err(_) => {
             utils::log::alert(
                 "FATAL",
@@ -121,9 +116,7 @@ pub fn env() -> Envs {
 
     // Check if variable SCAN_INTERVAL is able to be parsed.
     match utils::parse::string_time_notation_to_ms(&envs.scan_interval) {
-        // Variable can be parsed, thus valid.
         Ok(_) => (),
-        // Variable could not be parsed, throw a fatal.
         Err(_) => {
             utils::log::alert(
                 "FATAL",

@@ -40,11 +40,8 @@ pub struct Download {
 
 // Delete Download from Starr.
 pub fn delete(url: &String) {
-    // Send the request to delete to the API.
     match request::Client::new().delete(url).send() {
-        // Should be deleted.
         Ok(_) => (),
-        // Attempt to delete did not go through. (This should be attempted again next run)
         Err(error) => {
             utils::log::alert(
                 "WARN",
@@ -56,15 +53,11 @@ pub fn delete(url: &String) {
     }
 }
 
-// Obtains Sownloads from Starr.
+// Obtains Downloads from Starr.
 pub fn get(platform: &str, url: &str) -> Vec<Download> {
-    // Request active downloads in queue from the Starr API.
     let res: Response = match request::get(url) {
-        // API can be reached.
         Ok(res) => match res.json() {
-            // Response is valid.
             Ok(res) => res,
-            // Did not respond with valid JSON.
             Err(error) => {
                 utils::log::alert(
                     "WARN",
@@ -72,7 +65,6 @@ pub fn get(platform: &str, url: &str) -> Vec<Download> {
                     "The API has responded with an invalid response.",
                     Some(error.to_string()),
                 );
-                // Something went wrong, return an empty queue as fallback.
                 Response { records: vec![] }
             }
         },
@@ -83,41 +75,37 @@ pub fn get(platform: &str, url: &str) -> Vec<Download> {
                 "The connection to the API was unsuccessful.",
                 Some(error.to_string()),
             );
-            // Something went wrong, return an empty queue as fallback.
             Response { records: vec![] }
         }
     };
 
     let mut downloads: Vec<Download> = vec![];
 
-    // Iterate over all downloads.
     res.records.iter().for_each(|record| {
-        // Convert HMS from record to eta in milliseconds.
         let eta = {
             let timeleft = record.timeleft.clone().unwrap_or_else(|| "0".to_string());
             utils::parse::string_hms_to_ms(&timeleft)
         };
 
         // Determine status of download.
-        // - Please inform me; if you have a different method 
+        // - Please inform me; if you have a different method
         //   on how to identify a download that is fetching metadata.
         let status = if let Some(error_message) = &record.errorMessage {
             if error_message.to_ascii_lowercase().contains("metadata") {
-            "metadata".to_string()
+                "metadata".to_string()
             } else {
-            record.status.clone()
+                record.status.clone()
             }
         } else {
             record.status.clone()
         };
 
-        // Add download to the list.
         downloads.push(Download {
             id: record.id,
             name: utils::parse::recordname(&platform, &record),
             size: record.size as u64,
             status,
-            eta
+            eta,
         });
     });
 
@@ -131,15 +119,13 @@ pub fn process(
     queue_items: Vec<Download>,
     strikelist: &mut HashMap<u32, u32>,
 ) {
-    // Table rows that will be pretty-printed to the terminal.
     let mut table_contents: Vec<libs::table::TableContent> = vec![];
 
-    // Loop over all active downloads from the queue.
     for download in queue_items {
         let id = download.id.clone();
         let mut state = String::from("Normal");
 
-        // Add download id to strikes with default "0" if it does not exist yet.
+        // Add non-existing download to strikelist.
         let mut strikes: u32 = match strikelist.get(&id) {
             Some(strikes) => strikes.clone(),
             None => {
@@ -148,36 +134,31 @@ pub fn process(
             }
         };
 
-        // -- Bypass Rules -- Rules that define if a download is eligible to be striked.
+        // -- Bypass Section: Rules that define if a download is eligible to be striked.
 
         let mut bypass: bool = false;
 
-        // Download is larger than set threshold. (Safe to unwrap, gets validated in health-check.)
-        let ignore_above_size_bytes =
-            utils::parse::string_bytesize_to_bytes(&env.ignore_above_size)
+        if download.size
+            >= utils::parse::string_bytesize_to_bytes(&env.ignore_above_size)
                 .unwrap()
-                .as_u64();
-        if download.size >= ignore_above_size_bytes {
+                .as_u64()
+        {
             state = String::from("Ignored");
             bypass = true;
         }
 
-        // Download is queued and should not be processed.
         if download.status == "queued" {
             state = String::from("Queued");
             bypass = true;
         }
 
-        // -- Strike rules -- Rules that define when to strike a download.
+        // -- Strike Section: Rules that define when to strike a download.
 
         if !bypass {
-            // Extract timestamp from time notation. (Safe to unwrap, gets validated in health-check.)
             let max_download_time_ms =
                 utils::parse::string_time_notation_to_ms(&env.max_download_time).unwrap() as u64;
 
-            // Download is fetching metadata or will take longer than allowed threshold time.
             if download.status == "metadata" || download.eta >= max_download_time_ms {
-                // Increment strikes if it's below set maximum.
                 if strikes < env.max_strikes {
                     strikes += 1;
                     strikelist.insert(id, strikes);
@@ -185,7 +166,6 @@ pub fn process(
                 state = String::from("Striked");
             }
 
-            // Download meets set amount of strikes, a request to delete will be sent.
             if strikes >= env.max_strikes {
                 delete(&format!(
                     "{}queue/{}?apikey={}&blocklist={}&removeFromClient={}",
@@ -195,9 +175,8 @@ pub fn process(
             }
         }
 
-        // -- Logging --
+        // -- Logging Section
 
-        // Add download to pretty-print table.
         table_contents.push(libs::table::TableContent {
             strikes: format!("{}/{}", strikes, env.max_strikes),
             name: download.name.chars().take(32).collect::<String>(),
@@ -207,6 +186,5 @@ pub fn process(
         })
     }
 
-    // Print table to terminal.
     libs::table::render(&table_contents);
 }

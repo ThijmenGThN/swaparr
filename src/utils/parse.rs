@@ -30,7 +30,7 @@ pub fn string_bytesize_to_bytes(string: &String) -> Result<ByteSize, String> {
 pub fn string_hms_to_ms(string: &String) -> u64 {
     let parts: Vec<&str> = string.split(|c| c == ':' || c == '.').collect();
 
-    // Check if we have at least hours, minutes, and seconds
+    // Check if we have at least HH:MM:SS -> hours, minutes, and seconds
     if parts.len() < 3 {
         return 0;
     }
@@ -41,13 +41,13 @@ pub fn string_hms_to_ms(string: &String) -> u64 {
     let seconds: u64;
 
     match parts.len() {
-        // For the format "12:34:56"
+        // Format-type "12:34:56"
         3 => {
             hours = parts[0].parse().unwrap_or_else(|_| 0);
             minutes = parts[1].parse().unwrap_or_else(|_| 0);
             seconds = parts[2].parse().unwrap_or_else(|_| 0);
         }
-        // For the format "12.34:56:78"
+        // Format-type "12.34:56:78"
         4 => {
             days = parts[0].parse().unwrap_or_else(|_| 0);
             hours = parts[1].parse().unwrap_or_else(|_| 0);
@@ -61,9 +61,8 @@ pub fn string_hms_to_ms(string: &String) -> u64 {
     ((days * 24 + hours) * 3600 + minutes * 60 + seconds) * 1000
 }
 
-// Returns the API version per platform.
+// Returns the API version based on platform.
 pub fn baseapi(platform: &str, baseurl: &str) -> String {
-    // Translates platform to keyword used by the API.
     match platform {
         "radarr" => format!("{baseurl}/api/v3/"),
         "sonarr" => format!("{baseurl}/api/v3/"),
@@ -71,7 +70,6 @@ pub fn baseapi(platform: &str, baseurl: &str) -> String {
         "readarr" => format!("{baseurl}/api/v1/"),
         "whisparr" => format!("{baseurl}/api/v3/"),
         _ => {
-            // Supplied platform is not supported, throw an error.
             utils::log::alert(
                 "FATAL",
                 "Unknown \"PLATFORM\" value.",
@@ -83,9 +81,8 @@ pub fn baseapi(platform: &str, baseurl: &str) -> String {
     }
 }
 
-// Returns the API endpoint per platform.
+// Returns the API endpoint based on platform.
 pub fn queueapi(platform: &str, baseapi: &str, apikey: &str) -> String {
-    // Translates platform to keyword used by the API.
     match platform {
         "radarr" => format!("{baseapi}queue?includeUnknownMovieItems=true&includeMovie=true&apikey={apikey}"),
         "sonarr" => format!("{baseapi}queue?includeUnknownSeriesItems=true&includeSeries=true&apikey={apikey}"),
@@ -93,7 +90,6 @@ pub fn queueapi(platform: &str, baseapi: &str, apikey: &str) -> String {
         "readarr" => format!("{baseapi}queue?includeUnknownAuthorItems=true&includeAuthor=true&includeBook=true&apikey={apikey}"),
         "whisparr" => format!("{baseapi}queue?includeUnknownSeriesItems=true&includeSeries=true&includeEpisode=true&apikey={apikey}"),
         _ => {
-            // Supplied platform is not supported, throw an error.
             utils::log::alert(
                 "FATAL",
                 "Unknown \"PLATFORM\" value.",
@@ -138,7 +134,7 @@ pub fn recordname(platform: &str, record: &queue::Record) -> String {
     String::from(title)
 }
 
-// String to bool converter
+// String to boolean translator.
 pub fn string_to_bool(string: String) -> Result<bool, String> {
     match string.to_ascii_lowercase().as_str() {
         "true" => Ok(true),

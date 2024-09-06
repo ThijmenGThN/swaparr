@@ -3,12 +3,8 @@ use reqwest::blocking::get;
 use crate::utils;
 
 pub fn test(platform: &str, baseapi: &str, apikey: &str) {
-    // Check if the API can be reached.
     match get(&format!("{baseapi}health?apikey={apikey}")) {
-        // Can be reached, continue.
         Ok(res) => {
-            // Let's just assume that the APIKEY is
-            // invalid if the code returned is not "200".
             if res.status() != 200 {
                 utils::log::alert(
                     "FATAL",
@@ -20,7 +16,6 @@ pub fn test(platform: &str, baseapi: &str, apikey: &str) {
                 utils::system::exit(1);
             }
         }
-        // Could not be reached.
         Err(error) => {
             utils::log::alert(
                 "FATAL",
