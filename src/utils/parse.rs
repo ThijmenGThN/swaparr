@@ -137,3 +137,12 @@ pub fn recordname(platform: &str, record: &queue::Record) -> String {
 
     String::from(title)
 }
+
+// String to bool converter
+pub fn string_to_bool(string: String) -> Result<bool, String> {
+    match string.to_ascii_lowercase().as_str() {
+        "true" => Ok(true),
+        "false" => Ok(false),
+        _ => Err(string),
+    }
+}

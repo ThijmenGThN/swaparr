@@ -11,6 +11,7 @@ pub struct Envs {
     pub scan_interval: String,
     pub max_download_time: String,
     pub ignore_above_size: String,
+    pub remove_from_client: String,
 }
 
 // Voids provided vars and returns a default value.
@@ -76,6 +77,17 @@ pub fn env() -> Envs {
             // Allow falling back onto CHECK_INTERVAL for backwards compatibility.
             .or_else(|_| env::var("CHECK_INTERVAL"))
             .unwrap_or_else(|_| default("SCAN_INTERVAL", "10m", false)),
+
+        remove_from_client: match utils::parse::string_to_bool(
+            env::var("REMOVE_FROM_CLIENT")
+                .unwrap_or_else(|_| default("REMOVE_FROM_CLIENT", "true", false)),
+        ) {
+            Ok(value) => value.to_string(),
+            Err(_) => {
+                default("REMOVE_FROM_CLIENT", "true", true);
+                "true".to_string()
+            }
+        },
     };
 
     // Check if variable MAX_DOWNLOAD_TIME is able to be parsed.

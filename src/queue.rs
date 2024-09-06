@@ -164,8 +164,8 @@ pub fn process(
             // Download meets set amount of strikes, a request to delete will be sent.
             if strikes >= env.max_strikes {
                 delete(&format!(
-                    "{}queue/{}?blocklist=true&apikey={}",
-                    baseapi, id, env.apikey
+                    "{}queue/{}?apikey={}&blocklist={}&removeFromClient={}",
+                    baseapi, id, env.apikey, true, env.remove_from_client
                 ));
                 status = String::from("Removed");
             }
