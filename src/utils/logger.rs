@@ -24,7 +24,8 @@ pub fn banner(env: &utils::system::Envs) {
     println!("│ │ Max strikes: {}", &env.max_strikes);
     println!("│ │ Scan interval: {}", env.scan_interval);
     println!("│ │ Max download time: {}", &env.max_download_time);
-    println!("╰─╯ Ignore above size: {}\n", &env.ignore_above_size);
+    println!("│ │ Ignore above size: {}", &env.ignore_above_size);
+    println!("╰─╯ Remove from client: {}\n", &env.remove_from_client);
 
     // Open-Source = ❤️
     println!("╭─╮ Has Swaparr been useful and do you like open-source projects?");
