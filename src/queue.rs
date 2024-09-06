@@ -10,12 +10,14 @@ struct Response {
     records: Vec<Record>,
 }
 
+#[allow(non_snake_case)]
 #[derive(Deserialize)]
 pub struct Record {
     id: u32,
     size: f64,
     timeleft: Option<String>,
     status: String,
+    errorMessage: Option<String>,
     pub movie: Option<NestedRecord>,
     pub series: Option<NestedRecord>,
     pub album: Option<NestedRecord>,
@@ -96,12 +98,23 @@ pub fn get(platform: &str, url: &str) -> Vec<Download> {
             utils::parse::string_hms_to_ms(&timeleft)
         };
 
+        // Determine status of download.
+        let status = if let Some(error_message) = &record.errorMessage {
+            if error_message.to_ascii_lowercase().contains("metadata") {
+            "metadata".to_string()
+            } else {
+            record.status.clone()
+            }
+        } else {
+            record.status.clone()
+        };
+
         // Add download to the list.
         downloads.push(Download {
             id: record.id,
             name: utils::parse::recordname(&platform, &record),
             size: record.size as u64,
-            status: record.status.clone(),
+            status,
             eta
         });
     });
