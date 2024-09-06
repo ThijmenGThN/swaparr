@@ -72,6 +72,7 @@ services:
       - SCAN_INTERVAL=10m             # 1d, 6h, 30m, etc..   (Optional) default: 10m   
       - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
       - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
+      - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
 
   # -- (Optional)
   sonarr: 
@@ -86,6 +87,7 @@ services:
       - SCAN_INTERVAL=10m             # 1d, 6h, 30m, etc..   (Optional) default: 10m   
       - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
       - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
+      - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
 ```
 
 <details>
@@ -109,6 +111,7 @@ services:
         - SCAN_INTERVAL=10m             # 1d, 6h, 30m, etc..   (Optional) default: 10m   
         - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
         - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
+        - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
 
     # -- (Optional)
     sonarr: 
@@ -123,6 +126,7 @@ services:
         - SCAN_INTERVAL=10m             # 1d, 6h, 30m, etc..   (Optional) default: 10m   
         - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
         - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
+        - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
 
     # -- (Optional)
     lidarr: 
@@ -137,6 +141,7 @@ services:
         - SCAN_INTERVAL=10m             # 1d, 6h, 30m, etc..   (Optional) default: 10m   
         - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
         - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
+        - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
 
     # -- (Optional)
     readarr: 
@@ -151,6 +156,7 @@ services:
         - SCAN_INTERVAL=10m             # 1d, 6h, 30m, etc..   (Optional) default: 10m   
         - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
         - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
+        - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
 
     # -- (Optional)
     whisparr: 
@@ -165,6 +171,7 @@ services:
         - SCAN_INTERVAL=10m             # 1d, 6h, 30m, etc..   (Optional) default: 10m   
         - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
         - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
+        - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
   ```
 </details>
 
@@ -230,15 +237,16 @@ A brief rundown to shed light on a couple of things for you:
     <strong>Environment Variables</strong>
   </summary>
 
-  | Name              | Default                 | Description                                                                                         |
-  |-------------------|-------------------------|-----------------------------------------------------------------------------------------------------|
-  | BASEURL           | `http://127.0.0.1:7878` | The URL of a radarr, sonarr or other starr instance.                                                |
-  | APIKEY            | `7f3a8..cbc07`          | The API key of a radarr, sonarr or other starr instance.                                            |
-  | PLATFORM          | `radarr`                | Indicates the type of starr platform, either `radarr`, `sonarr`, `lidarr`, `readarr` or `whisparr`. |
-  | MAX_DOWNLOAD_TIME | `2h`                    | Maximum allowed download time before it's considered stalled.                                       |
-  | IGNORE_ABOVE_SIZE | `25GB`                  | Files larger than this size will be ignored and not monitored.                                      |
-  | SCAN_INTERVAL     | `10m`                   | How often Swaparr checks for stalled downloads.                                                     |
-  | MAX_STRIKES       | `3`                     | Maximum number of strikes a download can accumulate before it is removed.                           |
+  | Name               | Default                 | Description                                                                                         |
+  |--------------------|-------------------------|-----------------------------------------------------------------------------------------------------|
+  | BASEURL            | `http://127.0.0.1:7878` | The URL of a radarr, sonarr or other starr instance.                                                |
+  | APIKEY             | `7f3a8..cbc07`          | The API key of a radarr, sonarr or other starr instance.                                            |
+  | PLATFORM           | `radarr`                | Indicates the type of starr platform, either `radarr`, `sonarr`, `lidarr`, `readarr` or `whisparr`. |
+  | MAX_STRIKES        | `3`                     | Maximum number of strikes a download can accumulate before it is removed.                           |
+  | SCAN_INTERVAL      | `10m`                   | How often Swaparr checks for stalled downloads.                                                     |
+  | MAX_DOWNLOAD_TIME  | `2h`                    | Maximum allowed download time before it's considered stalled.                                       |
+  | IGNORE_ABOVE_SIZE  | `25GB`                  | Files larger than this size will be ignored and not monitored.                                      |
+  | REMOVE_FROM_CLIENT | `true`                  | Remove from both queue and download client (default) OR `false` only the queue of a starr instance. |
 </details>
 
 <details>
@@ -246,12 +254,13 @@ A brief rundown to shed light on a couple of things for you:
     <strong>Status-Types Explained</strong>
   </summary>
 
-  | **Status** | **Description**                                                                 |
-  |------------|---------------------------------------------------------------------------------|
-  | `Normal`   | Download is proceeding as expected; no issues detected.                         |
-  | `Striked`  | Download flagged as slow or stalled; may be removed if it continues to accumulate   strikes. |
-  | `Removed`  | Download has been attempted to be removed from the starr instance.       |
+  | **Status** | **Description**                                                                                    |
+  |------------|----------------------------------------------------------------------------------------------------| 
+  | `Normal`   | Download is proceeding as expected; no issues detected.                                            |
+  | `Striked`  | Download flagged as slow or stalled; may be removed if it continues to accumulate strikes.         |
+  | `Removed`  | Download has been attempted to be removed from the starr instance.                                 |
   | `Ignored`  | Download is not monitored because it falls outside the set thresholds (e.g., size or time limits). |
+  | `Queued`   | Download is in the queue waiting to start; will not be striked.                                    |
 </details>
 
 
