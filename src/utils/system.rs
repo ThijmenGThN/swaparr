@@ -83,10 +83,7 @@ pub fn env() -> Envs {
                 .unwrap_or_else(|_| default("REMOVE_FROM_CLIENT", "true", false)),
         ) {
             Ok(value) => value.to_string(),
-            Err(_) => {
-                default("REMOVE_FROM_CLIENT", "true", true);
-                "true".to_string()
-            }
+            Err(_) => default("REMOVE_FROM_CLIENT", "true", true).to_string()
         },
     };
 
