@@ -173,8 +173,8 @@ pub fn process(
             let max_download_time_ms =
                 utils::parse::string_time_notation_to_ms(&env.max_download_time).unwrap() as u64;
 
-            // Download will take longer than set threshold.
-            if download.eta >= max_download_time_ms {
+            // Download is fetching metadata or will take longer than allowed threshold time.
+            if download.status == "metadata" || download.eta >= max_download_time_ms {
                 // Increment strikes if it's below set maximum.
                 if strikes < env.max_strikes {
                     strikes += 1;
