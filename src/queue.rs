@@ -158,7 +158,7 @@ pub fn process(
             let max_download_time_ms =
                 utils::parse::string_time_notation_to_ms(&env.max_download_time).unwrap() as u64;
 
-            if download.status == "metadata" || download.eta >= max_download_time_ms || download.eta == 0 {
+            if download.status == "metadata" || download.eta >= max_download_time_ms || (download.eta == 0 && download.status != "queued") {
                 if strikes < env.max_strikes {
                     strikes += 1;
                     strikelist.insert(id, strikes);
