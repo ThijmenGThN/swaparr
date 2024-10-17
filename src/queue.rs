@@ -11,7 +11,7 @@ struct Response {
 }
 
 #[allow(non_snake_case)]
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct Record {
     id: u32,
     size: f64,
@@ -24,7 +24,7 @@ pub struct Record {
     pub book: Option<NestedRecord>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct NestedRecord {
     pub title: String,
 }
@@ -158,7 +158,7 @@ pub fn process(
             let max_download_time_ms =
                 utils::parse::string_time_notation_to_ms(&env.max_download_time).unwrap() as u64;
 
-            if download.status == "metadata" || download.eta >= max_download_time_ms {
+            if download.status == "metadata" || download.eta >= max_download_time_ms || (download.eta == 0 && download.status != "queued") {
                 if strikes < env.max_strikes {
                     strikes += 1;
                     strikelist.insert(id, strikes);
