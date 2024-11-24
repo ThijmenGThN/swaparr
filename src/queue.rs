@@ -158,7 +158,10 @@ pub fn process(
             let max_download_time_ms =
                 utils::parse::string_time_notation_to_ms(&env.max_download_time).unwrap() as u64;
 
-            if download.status == "metadata" || download.eta >= max_download_time_ms || (download.eta == 0 && download.status != "queued") {
+            if download.status == "metadata"
+                || download.eta >= max_download_time_ms
+                || (download.eta == 0 && download.status != "queued")
+            {
                 if strikes < env.max_strikes {
                     strikes += 1;
                     strikelist.insert(id, strikes);
@@ -167,10 +170,12 @@ pub fn process(
             }
 
             if strikes >= env.max_strikes {
-                delete(&format!(
-                    "{}queue/{}?apikey={}&blocklist={}&removeFromClient={}",
-                    baseapi, id, env.apikey, true, env.remove_from_client
-                ));
+                if env.dry_run == "false" {
+                    delete(&format!(
+                        "{}queue/{}?apikey={}&blocklist={}&removeFromClient={}",
+                        baseapi, id, env.apikey, true, env.remove_from_client
+                    ));
+                }
                 state = String::from("Removed");
             }
         }
@@ -187,4 +192,8 @@ pub fn process(
     }
 
     libs::table::render(&table_contents);
+
+    if &env.dry_run == "true" {
+        println!(" ─ Dry-run mode enabled, no actions will be taken.");
+    }
 }

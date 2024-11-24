@@ -12,6 +12,7 @@ pub struct Envs {
     pub max_download_time: String,
     pub ignore_above_size: String,
     pub remove_from_client: String,
+    pub dry_run: String,
 }
 
 // Voids provided vars and returns a default value.
@@ -82,7 +83,15 @@ pub fn env() -> Envs {
                 .unwrap_or_else(|_| default("REMOVE_FROM_CLIENT", "true", false)),
         ) {
             Ok(value) => value.to_string(),
-            Err(_) => default("REMOVE_FROM_CLIENT", "true", true).to_string()
+            Err(_) => default("REMOVE_FROM_CLIENT", "true", true).to_string(),
+        },
+
+        dry_run: match utils::parse::string_to_bool(
+            env::var("DRY_RUN")
+                .unwrap_or_else(|_| default("DRY_RUN", "false", false)),
+        ) {
+            Ok(value) => value.to_string(),
+            Err(_) => default("DRY_RUN", "false", true).to_string(),
         },
     };
 

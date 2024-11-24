@@ -73,6 +73,7 @@ services:
       - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
       - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
       - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
+      - DRY_RUN=false                 # Boolean              (Optional) default: false
 
   # -- (Optional)
   sonarr: 
@@ -88,6 +89,7 @@ services:
       - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
       - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
       - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
+      - DRY_RUN=false                 # Boolean              (Optional) default: false
 ```
 
 <details>
@@ -112,6 +114,7 @@ services:
         - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
         - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
         - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
+        - DRY_RUN=false                 # Boolean              (Optional) default: false
 
     # -- (Optional)
     sonarr: 
@@ -127,6 +130,7 @@ services:
         - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
         - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
         - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
+        - DRY_RUN=false                 # Boolean              (Optional) default: false
 
     # -- (Optional)
     lidarr: 
@@ -142,6 +146,7 @@ services:
         - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
         - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
         - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
+        - DRY_RUN=false                 # Boolean              (Optional) default: false
 
     # -- (Optional)
     readarr: 
@@ -157,6 +162,7 @@ services:
         - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
         - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
         - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
+        - DRY_RUN=false                 # Boolean              (Optional) default: false
 
     # -- (Optional)
     whisparr: 
@@ -172,6 +178,7 @@ services:
         - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
         - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
         - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
+        - DRY_RUN=false                 # Boolean              (Optional) default: false
   ```
 </details>
 
@@ -247,6 +254,7 @@ A brief rundown to shed light on a couple of things for you:
   | MAX_DOWNLOAD_TIME  | `2h`                    | Maximum allowed download time before it's considered stalled.                                       |
   | IGNORE_ABOVE_SIZE  | `25GB`                  | Files larger than this size will be ignored and not monitored.                                      |
   | REMOVE_FROM_CLIENT | `true`                  | Remove from both queue and download client (default) OR `false` only the queue of a starr instance. |
+  | DRY_RUN            | `false`                 | Sandbox mode; try Swaparr without it performing destructive actions on your instances.              |
 </details>
 
 <details>
@@ -260,7 +268,7 @@ A brief rundown to shed light on a couple of things for you:
   | `Striked`  | Download flagged as slow or stalled; may be removed if it continues to accumulate strikes.         |
   | `Removed`  | Download has been attempted to be removed from the starr instance.                                 |
   | `Ignored`  | Download is not monitored because it falls outside the set thresholds (e.g., size or time limits). |
-  | `Queued`   | Download is in the queue waiting to start; will not be striked.                                    |
+  | `Queued`   | Download is in the queue within the download client waiting to start; will not be striked.         |
 </details>
 
 
