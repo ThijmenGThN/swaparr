@@ -29,7 +29,7 @@ pub fn banner(env: &utils::system::Envs) {
     println!("╰─╯ Remove from client: {}\n", &env.remove_from_client);
 
     if &env.dry_run == "true" {
-        println!("╭─╮ Dry run: true");
+        println!("╭─╮ Dry-run: true");
         println!("╰─╯ All destructive actions are negated.\n");
     }
 
