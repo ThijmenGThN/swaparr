@@ -19,6 +19,7 @@ pub fn alert(method: &str, title: &str, message: &str, error: Option<String>) {
 }
 
 pub fn banner(env: &utils::system::Envs) {
+    // Yes, a lot of printlines, but it looks better like this.
     println!("\n ── Swaparr ───── \n");
     println!("╭─╮ Platform: {}", &env.platform);
     println!("│ │ Max strikes: {}", &env.max_strikes);
@@ -27,9 +28,13 @@ pub fn banner(env: &utils::system::Envs) {
     println!("│ │ Ignore above size: {}", &env.ignore_above_size);
     println!("╰─╯ Remove from client: {}\n", &env.remove_from_client);
 
+    if &env.dry_run == "true" {
+        println!("╭─╮ Dry-run: true");
+        println!("╰─╯ All destructive actions are negated.\n");
+    }
+
     // Open-Source = ❤️
-    println!("╭─╮ Has Swaparr been useful and do you like open-source projects?");
-    println!("│ │ Then please do consider to star the repository on GitHub.");
-    println!("╰─╯ Your gesture means a lot and will help improve Swaparr!");
+    println!("╭─╮ Be part of Swaparr's journey ⭐ Star us on GitHub!");
+    println!("╰─╯ Your support strengthens the open-source community.");
     println!("\n ──────────────── \n")
 }
