@@ -1,4 +1,10 @@
 
+> **‼️ Urgent - Fill out our Form ‼️**
+>
+> We need your input to shape the future of Swaparr! Please take a moment to fill out [forms.gle/3864i7behuYkrJzd6](https://forms.gle/3864i7behuYkrJzd6) and let us know which approach we will take, either a terminal or web interface for version 1. Your feedback is crucial in helping us develop Swaparr.
+>
+> **[Voice your opinion here](https://forms.gle/3864i7behuYkrJzd6)**
+
 # Swaparr
 
 Radarr, Sonarr and the other Starrs currently lack a built-in mechanism to handle stalled downloads, this project aims to solve that.
