@@ -287,6 +287,8 @@ Whether you need help, want to pitch in, or found a bug that needs fixing, just 
 
 We're excited to see that many of you agree that a web interface is a great choice! It will simplify checking the current status of downloads and configuring settings in a more user-friendly way. With the addition of numerous environment variables, managing Swaparr will become much easier.
 
+If you have any concerns or believe this change might not be beneficial, please open a [new discussion](https://github.com/ThijmenGThN/swaparr/discussions) to share your thoughts and discuss it further.
+
 <p align="center">
   <img src="https://i.imgur.com/v4CqD7u.png?s=128">
 </p>
