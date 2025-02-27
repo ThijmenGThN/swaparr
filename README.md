@@ -1,9 +1,20 @@
 
-> **The Google Form results are out!**
+> **The Road to a Web UI**
 >
-> Thank you to everyone who participated and shared your thoughts on Swaparr. The results are available at [the bottom of this readme](#google-form-results).
->
+> Thank you to everyone who participated and shared your thoughts on Swaparr via Google Forms.
+> We're excited to see that many of you agree that a web interface is a great choice! It will simplify checking the current status of downloads and configuring settings in a more user-friendly way. With the addition of numerous environment variables, managing Swaparr will become much easier.
 > Swaparr is evolving into a web app to enhance management and provide more insights on stalled downloads. The terminal-based version will still be available but will no longer be supported once the web version has been marked as stable.
+>
+> So, what's next?
+>
+> A few major things will change, for now, this is whats planned:
+>
+> - WebUI with Authentication, similiar to the other arrs.
+> - Platforms will be combined into one app, no need to run muliple instances of Swaparr anymore.
+> - Ability to blacklist downloads from Swaparr.
+> - Settings can be managed within the UI.
+>
+> Feel free to share any additions you'd like to see added.
 
 # Swaparr
 
@@ -282,13 +293,3 @@ A brief rundown to shed light on a couple of things for you:
 ## ✨ Swaparr is for everyone!
 
 Whether you need help, want to pitch in, or found a bug that needs fixing, just [open an issue](https://github.com/ThijmenGThN/swaparr/issues). We're all ears and ready to collaborate with you!
-
-## Google Form Results
-
-We're excited to see that many of you agree that a web interface is a great choice! It will simplify checking the current status of downloads and configuring settings in a more user-friendly way. With the addition of numerous environment variables, managing Swaparr will become much easier.
-
-If you have any concerns or believe this change might not be beneficial, please open a [new discussion](https://github.com/ThijmenGThN/swaparr/discussions) to share your thoughts and discuss it further.
-
-<p align="center">
-  <img src="https://i.imgur.com/v4CqD7u.png?s=128">
-</p>
