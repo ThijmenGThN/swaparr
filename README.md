@@ -1,9 +1,9 @@
 
 > **The Road to a Web UI**
 >
-> Thank you to everyone who participated and shared your thoughts on Swaparr via Google Forms.
-> We're excited to see that many of you agree that a web interface is a great choice! It will simplify checking the current status of downloads and configuring settings in a more user-friendly way. With the addition of numerous environment variables, managing Swaparr will become much easier.
-> Swaparr is evolving into a web app to enhance management and provide more insights on stalled downloads. The terminal-based version will still be available but will no longer be supported once the web version has been marked as stable.
+> Thank you to everyone who participated and shared their thoughts on Swaparr via Google Forms. We're thrilled to see that many of you agree that a web interface is a great choice! It will simplify checking the current status of downloads and configuring settings in a more user-friendly way. With the addition of numerous environment variables, managing Swaparr will become much easier.
+>
+> The terminal-based version will still be available but will no longer be supported once the web version has been marked as stable.
 >
 > So, what's next?
 >
