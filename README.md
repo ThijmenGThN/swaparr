@@ -1,21 +1,4 @@
 
-> **The Road to a Web UI**
->
-> Thank you to everyone who participated and shared their thoughts on Swaparr via Google Forms. We're thrilled to see that many of you agree that a web interface is a great choice! It will simplify checking the current status of downloads and configuring settings in a more user-friendly way. With the addition of numerous environment variables, managing Swaparr will become much easier.
->
-> The terminal-based version will still be available but will no longer be supported once the web version has been marked as stable.
->
-> So, what's next?
->
-> A few major things will change, for now, this is whats planned:
->
-> - WebUI with Authentication, similiar to the other arrs.
-> - Platforms will be combined into one app, no need to run muliple instances of Swaparr anymore.
-> - Ability to blacklist downloads from Swaparr.
-> - Settings can be managed within the UI.
->
-> Feel free to share any additions you'd like to see added.
-
 # Swaparr
 
 Radarr, Sonarr and the other Starrs currently lack a built-in mechanism to handle stalled downloads, this project aims to solve that.
