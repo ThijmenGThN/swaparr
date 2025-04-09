@@ -260,7 +260,7 @@ A brief rundown to shed light on a couple of things for you:
 <details>
   <summary>
     <strong>Status-Types Explained</strong>
-  </summary>
+    </summary>
 
   | **Status** | **Description**                                                                                    |
   |------------|----------------------------------------------------------------------------------------------------| 
@@ -269,6 +269,7 @@ A brief rundown to shed light on a couple of things for you:
   | `Removed`  | Download has been attempted to be removed from the starr instance.                                 |
   | `Ignored`  | Download is not monitored because it falls outside the set thresholds (e.g., size or time limits). |
   | `Queued`   | Download is in the queue within the download client waiting to start; will not be striked.         |
+  | `Delayed`  | Download is temporarily paused or scheduled for later processing as defined in a delay profile.    |
 </details>
 
 
