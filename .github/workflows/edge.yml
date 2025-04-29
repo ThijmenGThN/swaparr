@@ -15,10 +15,30 @@ jobs:
       fail-fast: false
       matrix:
         platform:
+          # Standard x86_64 Linux servers and desktops
           - docker: linux/amd64
             cross: x86_64-unknown-linux-musl
+        
+          # 32-bit ARM devices
+          - docker: linux/arm/v6
+            cross: arm-unknown-linux-musleabi
+        
+          # 32-bit ARMv7 devices
           - docker: linux/arm/v7
+            cross: armv7-unknown-linux-musleabihf
+        
+          # 64-bit ARM devices
+          - docker: linux/arm64
             cross: aarch64-unknown-linux-musl
+        
+          # IBM PowerPC 64-bit
+          - docker: linux/ppc64le
+            cross: powerpc64le-unknown-linux-gnu
+        
+          # IBM Z
+          - docker: linux/s390x
+            cross: s390x-unknown-linux-gnu
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4       

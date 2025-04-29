@@ -152,6 +152,11 @@ pub fn process(
             bypass = true;
         }
 
+        if download.status == "delay" {
+            state = String::from("Delayed");
+            bypass = true;
+        }
+
         // -- Strike Section: Rules that define when to strike a download.
 
         if !bypass {

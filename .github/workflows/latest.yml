@@ -15,14 +15,34 @@ jobs:
       fail-fast: false
       matrix:
         platform:
+          # Standard x86_64 Linux servers and desktops
           - docker: linux/amd64
             cross: x86_64-unknown-linux-musl
+        
+          # 32-bit ARM devices
+          - docker: linux/arm/v6
+            cross: arm-unknown-linux-musleabi
+        
+          # 32-bit ARMv7 devices
           - docker: linux/arm/v7
+            cross: armv7-unknown-linux-musleabihf
+        
+          # 64-bit ARM devices
+          - docker: linux/arm64
             cross: aarch64-unknown-linux-musl
+        
+          # IBM PowerPC 64-bit
+          - docker: linux/ppc64le
+            cross: powerpc64le-unknown-linux-gnu
+        
+          # IBM Z
+          - docker: linux/s390x
+            cross: s390x-unknown-linux-gnu
+            
     steps:
       - name: Checkout
-        uses: actions/checkout@v4       
-          
+        uses: actions/checkout@v4
+
       - name: Build binary with cross
         run: |
           export CROSS_NO_WARNINGS=0
@@ -49,7 +69,7 @@ jobs:
         id: meta
         with:
           images: ${{ env.REGISTRY_IMAGE }}
-      
+
       - name: Build container and push by digest
         uses: docker/build-push-action@v6
         id: push
@@ -58,17 +78,17 @@ jobs:
           platforms: ${{ matrix.platform.docker }}
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=image,name=${{ env.REGISTRY_IMAGE }},push-by-digest=true,name-canonical=true,push=true
-      
+
       - name: Export digest
         run: |
           mkdir -p /tmp/digests
           digest="${{ steps.push.outputs.digest }}"
-          touch "/tmp/digests/${digest#sha256:}"          
-      
+          touch "/tmp/digests/${digest#sha256:}"
+
       - name: Store Platform Pair
         run: |
           platform=${{ matrix.platform.docker }}
-          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV   
+          echo "PLATFORM_PAIR=${platform//\//-}" >> $GITHUB_ENV
 
       - name: Upload digest
         uses: actions/upload-artifact@v4
@@ -89,10 +109,10 @@ jobs:
           path: /tmp/digests
           pattern: digests-*
           merge-multiple: true
-      
+
       - name: Setup Buildx
         uses: docker/setup-buildx-action@v3
-      
+
       - name: Set Metadata
         id: meta
         uses: docker/metadata-action@v5
@@ -101,23 +121,23 @@ jobs:
           tags: |
             type=raw,value=latest
             type=semver,pattern={{version}}
-      
+
       - name: Login to Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: thijmengthn
           password: ${{ secrets.GH_PAT }}
-      
+
       - name: Create manifest list and push
         working-directory: /tmp/digests
         run: |
           docker buildx imagetools create $(jq -cr '.tags | map("-t " + .) | join(" ")' <<< "$DOCKER_METADATA_OUTPUT_JSON") \
-            $(printf '${{ env.REGISTRY_IMAGE }}@sha256:%s ' *) \
-      
+            $(printf '${{ env.REGISTRY_IMAGE }}@sha256:%s ' *)
+
       - name: Inspect image
         run: |
-          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}   
+          docker buildx imagetools inspect ${{ env.REGISTRY_IMAGE }}:${{ steps.meta.outputs.version }}
 
   clean:
     name: Clean
