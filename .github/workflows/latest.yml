@@ -19,10 +19,6 @@ jobs:
           - docker: linux/amd64
             cross: x86_64-unknown-linux-musl
         
-          # Windows servers and desktops
-          - docker: windows/amd64
-            cross: x86_64-pc-windows-gnu
-        
           # 32-bit ARM devices
           - docker: linux/arm/v6
             cross: arm-unknown-linux-musleabi
