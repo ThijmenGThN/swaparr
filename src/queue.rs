@@ -114,7 +114,7 @@ fn record_to_download(platform: &str, record: &Record) -> Download {
 }
 
 // Obtains Downloads from Starr, paginating through all results.
-pub fn get(platform: &str, url: &str) -> Vec<Download> {
+pub fn get(platform: &str, url: &str) -> (Vec<Download>, bool) {
     let mut downloads: Vec<Download> = vec![];
     let mut page: u32 = 1;
 
@@ -122,7 +122,7 @@ pub fn get(platform: &str, url: &str) -> Vec<Download> {
         let paged_url = format!("{}&page={}", url, page);
         let res = match fetch_page(&paged_url) {
             Some(res) => res,
-            None => return downloads,
+            None => return (downloads, page > 1),
         };
 
         res.records.iter().for_each(|record| {
@@ -137,7 +137,7 @@ pub fn get(platform: &str, url: &str) -> Vec<Download> {
         page += 1;
     }
 
-    downloads
+    (downloads, true)
 }
 
 // Determines if the download is eligible to be striked.

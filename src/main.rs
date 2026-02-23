@@ -19,7 +19,8 @@ fn main() {
     let mut strikelist: HashMap<u32, u32> = HashMap::new();
 
     loop {
-        let queue_items = queue::get(&env.platform, &queueapi);
+        let (queue_items, api_reachable) = queue::get(&env.platform, &queueapi);
+        std::fs::write("/tmp/swaparr.health", if api_reachable { "1" } else { "0" }).ok();
 
         // Cleanup downloads tracker
         strikelist.retain(|&k, _| queue_items.iter().any(|item| item.id == k));
