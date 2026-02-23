@@ -270,6 +270,7 @@ A brief rundown to shed light on a couple of things for you:
   | `Ignored`  | Download is not monitored because it falls outside the set thresholds (e.g., size or time limits). |
   | `Queued`   | Download is in the queue within the download client waiting to start; will not be striked.         |
   | `Delayed`  | Download is temporarily paused or scheduled for later processing as defined in a delay profile.    |
+  | `Completed`| Download has finished and is seeding; will not be striked.                                         |
 </details>
 
 
