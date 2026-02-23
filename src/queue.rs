@@ -185,6 +185,11 @@ pub fn process(
             bypass = true;
         }
 
+        if download.status == "paused" {
+            state = String::from("Paused");
+            bypass = true;
+        }
+
         // -- Strike Section: Rules that define when to strike a download.
 
         if !bypass {
