@@ -5,8 +5,12 @@ use serde::Deserialize;
 
 use crate::{libs, utils};
 
+#[allow(non_snake_case)]
 #[derive(Deserialize)]
 struct Response {
+    page: u32,
+    pageSize: u32,
+    totalRecords: u32,
     records: Vec<Record>,
 }
 
@@ -53,11 +57,11 @@ pub fn delete(url: &String) {
     }
 }
 
-// Obtains Downloads from Starr.
-pub fn get(platform: &str, url: &str) -> Vec<Download> {
-    let res: Response = match request::get(url) {
+// Fetches a single page from the Starr queue API.
+fn fetch_page(url: &str) -> Option<Response> {
+    match request::get(url) {
         Ok(res) => match res.json() {
-            Ok(res) => res,
+            Ok(res) => Some(res),
             Err(error) => {
                 utils::log::alert(
                     "WARN",
@@ -65,7 +69,7 @@ pub fn get(platform: &str, url: &str) -> Vec<Download> {
                     "The API has responded with an invalid response.",
                     Some(error.to_string()),
                 );
-                Response { records: vec![] }
+                None
             }
         },
         Err(error) => {
@@ -75,39 +79,63 @@ pub fn get(platform: &str, url: &str) -> Vec<Download> {
                 "The connection to the API was unsuccessful.",
                 Some(error.to_string()),
             );
-            Response { records: vec![] }
+            None
         }
+    }
+}
+
+// Converts a Record into a Download.
+fn record_to_download(platform: &str, record: &Record) -> Download {
+    let eta = {
+        let timeleft = record.timeleft.clone().unwrap_or_else(|| "0".to_string());
+        utils::parse::string_hms_to_ms(&timeleft)
     };
 
-    let mut downloads: Vec<Download> = vec![];
-
-    res.records.iter().for_each(|record| {
-        let eta = {
-            let timeleft = record.timeleft.clone().unwrap_or_else(|| "0".to_string());
-            utils::parse::string_hms_to_ms(&timeleft)
-        };
-
-        // Determine status of download.
-        // - Please inform me; if you have a different method
-        //   on how to identify a download that is fetching metadata.
-        let status = if let Some(error_message) = &record.errorMessage {
-            if error_message.to_ascii_lowercase().contains("metadata") {
-                "metadata".to_string()
-            } else {
-                record.status.clone()
-            }
+    // Determine status of download.
+    // - Please inform me; if you have a different method
+    //   on how to identify a download that is fetching metadata.
+    let status = if let Some(error_message) = &record.errorMessage {
+        if error_message.to_ascii_lowercase().contains("metadata") {
+            "metadata".to_string()
         } else {
             record.status.clone()
+        }
+    } else {
+        record.status.clone()
+    };
+
+    Download {
+        id: record.id,
+        name: utils::parse::recordname(&platform, &record),
+        size: record.size as u64,
+        status,
+        eta,
+    }
+}
+
+// Obtains Downloads from Starr, paginating through all results.
+pub fn get(platform: &str, url: &str) -> Vec<Download> {
+    let mut downloads: Vec<Download> = vec![];
+    let mut page: u32 = 1;
+
+    loop {
+        let paged_url = format!("{}&page={}", url, page);
+        let res = match fetch_page(&paged_url) {
+            Some(res) => res,
+            None => return downloads,
         };
 
-        downloads.push(Download {
-            id: record.id,
-            name: utils::parse::recordname(&platform, &record),
-            size: record.size as u64,
-            status,
-            eta,
+        res.records.iter().for_each(|record| {
+            downloads.push(record_to_download(platform, record));
         });
-    });
+
+        let fetched = (res.page - 1) * res.pageSize + res.records.len() as u32;
+        if fetched >= res.totalRecords {
+            break;
+        }
+
+        page += 1;
+    }
 
     downloads
 }

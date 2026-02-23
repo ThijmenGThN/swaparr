@@ -82,14 +82,16 @@ pub fn baseapi(platform: &str, baseurl: &str) -> String {
 }
 
 // Returns the API endpoint based on platform.
+// The returned URL does not include a `page` parameter — queue::get() appends it per request.
 pub fn queueapi(platform: &str, baseapi: &str, apikey: &str) -> String {
-    let default_page_size = 256;
+    let page_size = 50;
+    let sort = "sortKey=timeleft";
     match platform {
-        "radarr" => format!("{baseapi}queue?includeUnknownMovieItems=true&includeMovie=true&pageSize={default_page_size}&apikey={apikey}"),
-        "sonarr" => format!("{baseapi}queue?includeUnknownSeriesItems=true&includeSeries=true&pageSize={default_page_size}&apikey={apikey}"),
-        "lidarr" => format!("{baseapi}queue?includeUnknownArtistItems=true&includeArtist=true&includeAlbum=true&pageSize={default_page_size}&apikey={apikey}"),
-        "readarr" => format!("{baseapi}queue?includeUnknownAuthorItems=true&includeAuthor=true&includeBook=true&pageSize={default_page_size}&apikey={apikey}"),
-        "whisparr" => format!("{baseapi}queue?includeUnknownSeriesItems=true&includeSeries=true&includeEpisode=true&pageSize={default_page_size}&apikey={apikey}"),
+        "radarr" => format!("{baseapi}queue?includeUnknownMovieItems=true&includeMovie=true&pageSize={page_size}&{sort}&apikey={apikey}"),
+        "sonarr" => format!("{baseapi}queue?includeUnknownSeriesItems=true&includeSeries=true&pageSize={page_size}&{sort}&apikey={apikey}"),
+        "lidarr" => format!("{baseapi}queue?includeUnknownArtistItems=true&includeArtist=true&includeAlbum=true&pageSize={page_size}&{sort}&apikey={apikey}"),
+        "readarr" => format!("{baseapi}queue?includeUnknownAuthorItems=true&includeAuthor=true&includeBook=true&pageSize={page_size}&{sort}&apikey={apikey}"),
+        "whisparr" => format!("{baseapi}queue?includeUnknownSeriesItems=true&includeSeries=true&includeEpisode=true&pageSize={page_size}&{sort}&apikey={apikey}"),
         _ => {
             utils::log::alert(
                 "FATAL",
