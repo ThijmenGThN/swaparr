@@ -60,7 +60,9 @@ pub fn env() -> Envs {
             }),
 
         baseurl: env::var("BASEURL")
-            .unwrap_or_else(|_| default("BASEURL", "http://127.0.0.1:7878", false)),
+            .unwrap_or_else(|_| default("BASEURL", "http://127.0.0.1:7878", false))
+            .trim_end_matches('/')
+            .to_string(),
 
         platform: env::var("PLATFORM").unwrap_or_else(|_| default("PLATFORM", "radarr", false)),
 
