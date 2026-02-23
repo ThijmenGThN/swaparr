@@ -287,8 +287,4 @@ A brief rundown to shed light on a couple of things for you:
 
 Whether you need help, want to pitch in, or found a bug that needs fixing, just [open an issue](https://github.com/ThijmenGThN/swaparr/issues). We're all ears and ready to collaborate with you!
 
-
-
-## Stargazers
-
 [![Star History Chart](https://starchart.cc/ThijmenGThN/swaparr.svg?variant=adaptive)](https://starchart.cc/ThijmenGThN/swaparr)
