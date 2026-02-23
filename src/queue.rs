@@ -175,7 +175,7 @@ pub fn process(
             bypass = true;
         }
 
-        if download.status == "queued" {
+        if download.status == "queued" && env.strike_queued == "false" {
             state = String::from("Queued");
             bypass = true;
         }

@@ -13,6 +13,7 @@ pub struct Envs {
     pub ignore_above_size: String,
     pub remove_from_client: String,
     pub dry_run: String,
+    pub strike_queued: String,
 }
 
 // Voids provided vars and returns a default value.
@@ -92,6 +93,14 @@ pub fn env() -> Envs {
         ) {
             Ok(value) => value.to_string(),
             Err(_) => default("DRY_RUN", "false", true).to_string(),
+        },
+
+        strike_queued: match utils::parse::string_to_bool(
+            env::var("STRIKE_QUEUED")
+                .unwrap_or_else(|_| default("STRIKE_QUEUED", "false", false)),
+        ) {
+            Ok(value) => value.to_string(),
+            Err(_) => default("STRIKE_QUEUED", "false", true).to_string(),
         },
     };
 

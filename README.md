@@ -73,22 +73,24 @@ services:
       - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
       - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
       - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
+      - STRIKE_QUEUED=false           # Boolean              (Optional) default: false
       - DRY_RUN=false                 # Boolean              (Optional) default: false
 
   # -- (Optional)
-  sonarr: 
+  sonarr:
     image: ghcr.io/thijmengthn/swaparr:latest
     container_name: swaparr-sonarr
     restart: unless-stopped
     environment:
       - BASEURL=http://127.0.0.1:8989 # IP or FQDN           (Required)
-      - APIKEY=7f3a8..cbc07           # Sonarr API Key       (Required)                
+      - APIKEY=7f3a8..cbc07           # Sonarr API Key       (Required)
       - PLATFORM=sonarr               # "radarr", "sonarr".. (Optional) default: radarr
-      - MAX_STRIKES=3                 # Positive number      (Optional) default: 3     
-      - SCAN_INTERVAL=10m             # 1d, 6h, 30m, etc..   (Optional) default: 10m   
-      - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
-      - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
+      - MAX_STRIKES=3                 # Positive number      (Optional) default: 3
+      - SCAN_INTERVAL=10m             # 1d, 6h, 30m, etc..   (Optional) default: 10m
+      - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h
+      - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB
       - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
+      - STRIKE_QUEUED=false           # Boolean              (Optional) default: false
       - DRY_RUN=false                 # Boolean              (Optional) default: false
 ```
 
@@ -114,10 +116,11 @@ services:
         - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
         - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
         - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
+        - STRIKE_QUEUED=false           # Boolean              (Optional) default: false
         - DRY_RUN=false                 # Boolean              (Optional) default: false
 
     # -- (Optional)
-    sonarr: 
+    sonarr:
       image: ghcr.io/thijmengthn/swaparr:latest
       container_name: swaparr-sonarr
       restart: unless-stopped
@@ -130,10 +133,11 @@ services:
         - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
         - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
         - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
+        - STRIKE_QUEUED=false           # Boolean              (Optional) default: false
         - DRY_RUN=false                 # Boolean              (Optional) default: false
 
     # -- (Optional)
-    lidarr: 
+    lidarr:
       image: ghcr.io/thijmengthn/swaparr:latest
       container_name: swaparr-lidarr
       restart: unless-stopped
@@ -146,10 +150,11 @@ services:
         - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
         - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
         - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
+        - STRIKE_QUEUED=false           # Boolean              (Optional) default: false
         - DRY_RUN=false                 # Boolean              (Optional) default: false
 
     # -- (Optional)
-    readarr: 
+    readarr:
       image: ghcr.io/thijmengthn/swaparr:latest
       container_name: swaparr-readarr
       restart: unless-stopped
@@ -162,10 +167,11 @@ services:
         - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
         - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
         - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
+        - STRIKE_QUEUED=false           # Boolean              (Optional) default: false
         - DRY_RUN=false                 # Boolean              (Optional) default: false
 
     # -- (Optional)
-    whisparr: 
+    whisparr:
       image: ghcr.io/thijmengthn/swaparr:latest
       container_name: swaparr-whisparr
       restart: unless-stopped
@@ -178,6 +184,7 @@ services:
         - MAX_DOWNLOAD_TIME=2h          # 1d, 6h, 30m, etc..   (Optional) default: 2h    
         - IGNORE_ABOVE_SIZE=25GB        # 1TB, 1GB, 1MB, etc.. (Optional) default: 25GB  
         - REMOVE_FROM_CLIENT=true       # Boolean              (Optional) default: true
+        - STRIKE_QUEUED=false           # Boolean              (Optional) default: false
         - DRY_RUN=false                 # Boolean              (Optional) default: false
   ```
 </details>
@@ -254,6 +261,7 @@ A brief rundown to shed light on a couple of things for you:
   | MAX_DOWNLOAD_TIME  | `2h`                    | Maximum allowed download time before it's considered stalled.                                       |
   | IGNORE_ABOVE_SIZE  | `25GB`                  | Files larger than this size will be ignored and not monitored.                                      |
   | REMOVE_FROM_CLIENT | `true`                  | Remove from both queue and download client (default) OR `false` only the queue of a starr instance. |
+  | STRIKE_QUEUED      | `false`                 | When enabled, queued downloads are eligible to be striked instead of being bypassed.                |
   | DRY_RUN            | `false`                 | Sandbox mode; try Swaparr without it performing destructive actions on your instances.              |
 </details>
 
