@@ -13,6 +13,7 @@ pub struct Envs {
     pub ignore_above_size: String,
     pub remove_from_client: String,
     pub dry_run: String,
+    pub strike_queued: String,
 }
 
 // Voids provided vars and returns a default value.
@@ -59,7 +60,9 @@ pub fn env() -> Envs {
             }),
 
         baseurl: env::var("BASEURL")
-            .unwrap_or_else(|_| default("BASEURL", "http://127.0.0.1:7878", false)),
+            .unwrap_or_else(|_| default("BASEURL", "http://127.0.0.1:7878", false))
+            .trim_end_matches('/')
+            .to_string(),
 
         platform: env::var("PLATFORM").unwrap_or_else(|_| default("PLATFORM", "radarr", false)),
 
@@ -92,6 +95,14 @@ pub fn env() -> Envs {
         ) {
             Ok(value) => value.to_string(),
             Err(_) => default("DRY_RUN", "false", true).to_string(),
+        },
+
+        strike_queued: match utils::parse::string_to_bool(
+            env::var("STRIKE_QUEUED")
+                .unwrap_or_else(|_| default("STRIKE_QUEUED", "false", false)),
+        ) {
+            Ok(value) => value.to_string(),
+            Err(_) => default("STRIKE_QUEUED", "false", true).to_string(),
         },
     };
 
