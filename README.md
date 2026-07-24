@@ -35,10 +35,6 @@ Swaparr quietly operates in the background, offering full customization options 
 
 ## Getting Started
 
-> [!WARNING]
-> Swaparr is still in beta, things might change before reaching version ` 1.0.0 `
-
-
 
 ### Prerequisites 
 
